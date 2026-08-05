@@ -133,7 +133,6 @@ function Dashboard({ user, onLogout }) {
           <p>
             <strong>Phone Number:</strong> {user.phone_number}
           </p>
-          <p>More profile features will be added later.</p>
         </div>
       </section>
     );
