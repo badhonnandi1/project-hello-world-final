@@ -1,9 +1,12 @@
 # Environment variables and secrets
+Backend/.env
+Frontend/.env
 .env
 .env.*
 !.env.example
 
 # Python
+Backend/.venv/
 __pycache__/
 *.py[cod]
 *.egg-info/
@@ -16,6 +19,8 @@ htmlcov/
 venv/
 
 # React / Node
+Frontend/node_modules/
+Frontend/dist/
 node_modules/
 dist/
 coverage/
