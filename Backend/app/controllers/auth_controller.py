@@ -8,8 +8,7 @@ from app.security import create_access_token, decode_access_token, hash_password
 # This function creates a new user account after checking for duplicate values.
 def register_user(db, registration_data):
     existing_username = (
-        db.query(UserAuth)
-        .filter(UserAuth.user_name == registration_data.user_name)
+        db.query(UserAuth).filter(UserAuth.user_name == registration_data.user_name)
         .first()
     )
     if existing_username:

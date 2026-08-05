@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 
+import Dashboard from "./Dashboard";
 import { getCurrentUser, loginUser, registerUser } from "./api";
 
 
@@ -124,30 +125,8 @@ function App() {
   }
 
   if (currentUser) {
-    return (
-      <main className="page">
-        <section className="card">
-          <h1>Dashboard</h1>
-          <p className="muted">You are logged in.</p>
-
-          <div className="user-details">
-            <p>
-              <strong>User ID:</strong> {currentUser.id}
-            </p>
-            <p>
-              <strong>Username:</strong> {currentUser.user_name}
-            </p>
-            <p>
-              <strong>Phone number:</strong> {currentUser.phone_number}
-            </p>
-          </div>
-
-          <button className="logout-button" type="button" onClick={handleLogout}>
-            Logout
-          </button>
-        </section>
-      </main>
-    );
+    // A verified user is redirected to the common dashboard.
+    return <Dashboard user={currentUser} onLogout={handleLogout} />;
   }
 
   return (
