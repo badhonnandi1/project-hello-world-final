@@ -1,4 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+
+import KnowledgeVault from "./KnowledgeVault";
+import { getMyProfile, saveMyProfile } from "./api";
 
 
 // Future API endpoints can be connected to each feature from this list.
@@ -26,26 +29,104 @@ const features = [
 function Dashboard({ user, onLogout }) {
   const [activePage, setActivePage] = useState("home");
   const [showFeatures, setShowFeatures] = useState(false);
+  const [profile, setProfile] = useState(null);
+  const [profileForm, setProfileForm] = useState({ full_name: "", email: "" });
+  const [profileMessage, setProfileMessage] = useState("");
+  const [profileError, setProfileError] = useState("");
+  const [profileLoading, setProfileLoading] = useState(true);
+  const [profileSaving, setProfileSaving] = useState(false);
+
+  const token = localStorage.getItem("access_token");
+
+  // This effect sends users without a saved app profile to the Profile page.
+  useEffect(() => {
+    async function checkProfile() {
+      setProfileLoading(true);
+      setProfileError("");
+
+      try {
+        const savedProfile = await getMyProfile(token);
+        setProfile(savedProfile);
+        setProfileForm({
+          full_name: savedProfile.full_name,
+          email: savedProfile.email,
+        });
+        setActivePage("home");
+      } catch (error) {
+        if (error.status === 404) {
+          setActivePage("profile");
+          setProfileError("Please complete your profile before using GhostWriter AI.");
+        } else if (error.status === 401) {
+          onLogout();
+        } else {
+          setProfileError(error.message);
+          setActivePage("profile");
+        }
+      } finally {
+        setProfileLoading(false);
+      }
+    }
+
+    checkProfile();
+  }, []);
 
   // This function changes the dashboard body without reloading the page.
   function openPage(pageName) {
+    if (!profile && !profileLoading && pageName !== "profile") {
+      setActivePage("profile");
+      setProfileError("Please complete your profile before using GhostWriter AI.");
+      return;
+    }
+
     setActivePage(pageName);
     setShowFeatures(false);
-  }
-
-  // This function shows a temporary message until the Add Item form is built.
-  function handleAddItem() {
-    alert("Add Item form will be added later.");
-  }
-
-  // This function shows a temporary message for sample card buttons.
-  function handleKnowledgeAction(actionName) {
-    alert(`${actionName} functionality will be added later.`);
   }
 
   // This function connects the SignOut button to the logout logic from App.jsx.
   function handleSignOut() {
     onLogout();
+  }
+
+  // This function updates the profile form as the user types.
+  function handleProfileChange(event) {
+    const { name, value } = event.target;
+    setProfileForm({
+      ...profileForm,
+      [name]: value,
+    });
+  }
+
+  // This function saves the app profile, then sends the user to Home.
+  async function handleProfileSave(event) {
+    event.preventDefault();
+    setProfileError("");
+    setProfileMessage("");
+
+    if (!profileForm.full_name.trim() || !profileForm.email.trim()) {
+      setProfileError("Full name and email are required.");
+      return;
+    }
+
+    setProfileSaving(true);
+
+    try {
+      const savedProfile = await saveMyProfile(token, profileForm);
+      setProfile(savedProfile);
+      setProfileForm({
+        full_name: savedProfile.full_name,
+        email: savedProfile.email,
+      });
+      setProfileMessage("Profile saved successfully.");
+      setActivePage("home");
+    } catch (error) {
+      if (error.status === 401) {
+        onLogout();
+      } else {
+        setProfileError(error.message);
+      }
+    } finally {
+      setProfileSaving(false);
+    }
   }
 
   // This function finds the name for the selected feature.
@@ -71,69 +152,51 @@ function Dashboard({ user, onLogout }) {
     );
   }
 
-  // This function renders the sample Knowledge Vault body.
-  function renderKnowledgeVault() {
-    return (
-      <section className="knowledge-page">
-        <h1>Knowledge Vault</h1>
-        <p className="dashboard-description">
-          Save and organize your stories, achievements, lessons, opinions, and facts.
-        </p>
-
-        <div className="knowledge-actions">
-          <div className="knowledge-search">
-            <label className="visually-hidden" htmlFor="knowledge-search">
-              Search your saved knowledge
-            </label>
-            <span aria-hidden="true">⌕</span>
-            <input id="knowledge-search" type="search" placeholder="Search your saved knowledge" />
-          </div>
-
-          <button className="add-item-button" type="button" onClick={handleAddItem}>
-            ⊕ Add Item
-          </button>
-        </div>
-
-        <article className="knowledge-card">
-          <h2>How We Helped a Customer Win</h2>
-          <p>
-            By mapping their goals to a simple rollout plan, the customer hit their target two
-            months ahead of schedule.
-          </p>
-
-          <div className="card-actions">
-            <button type="button" onClick={() => handleKnowledgeAction("View")}>
-              View
-            </button>
-            <button type="button" onClick={() => handleKnowledgeAction("Edit")}>
-              Edit
-            </button>
-            <button type="button" onClick={() => handleKnowledgeAction("Archive")}>
-              Archive
-            </button>
-          </div>
-        </article>
-      </section>
-    );
-  }
-
   // This function renders the user's simple profile body.
   function renderProfile() {
     return (
       <section>
         <h1>My Profile</h1>
 
-        <div className="profile-card">
-          <p>
-            <strong>User ID:</strong> {user.id}
-          </p>
-          <p>
-            <strong>Username:</strong> {user.user_name}
-          </p>
+        <form className="profile-card profile-form" onSubmit={handleProfileSave}>
+          {profileMessage && <p className="knowledge-message">{profileMessage}</p>}
+          {profileError && <p className="knowledge-error">{profileError}</p>}
+
+
           <p>
             <strong>Phone Number:</strong> {user.phone_number}
           </p>
-        </div>
+
+          <label htmlFor="profile-full-name">Full Name</label>
+          <input
+            id="profile-full-name"
+            name="full_name"
+            type="text"
+            value={profileForm.full_name}
+            onChange={handleProfileChange}
+            required
+          />
+
+          <label htmlFor="profile-email">Email</label>
+          <input
+            id="profile-email"
+            name="email"
+            type="email"
+            value={profileForm.email}
+            onChange={handleProfileChange}
+            required
+          />
+
+          {profile && (
+            <p>
+              <strong>Profile Status:</strong> Saved
+            </p>
+          )}
+
+          <button type="submit" disabled={profileSaving}>
+            {profileSaving ? "Saving..." : "Save"}
+          </button>
+        </form>
       </section>
     );
   }
@@ -161,7 +224,12 @@ function Dashboard({ user, onLogout }) {
     }
 
     if (activePage === "knowledge-vault") {
-      return renderKnowledgeVault();
+      return (
+        <KnowledgeVault
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
     }
 
     if (activePage === "profile") {
@@ -211,7 +279,9 @@ function Dashboard({ user, onLogout }) {
         </div>
       </nav>
 
-      <main className="dashboard-main">{renderDashboardBody()}</main>
+      <main className="dashboard-main">
+        {profileLoading ? <p>Loading dashboard...</p> : renderDashboardBody()}
+      </main>
 
       <footer className="dashboard-footer">
         <strong>GhostWriter AI</strong>

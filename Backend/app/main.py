@@ -9,6 +9,8 @@ from app.db import Base, engine
 import app.models
 from app.models.user_model import UserAuth
 from app.routes.auth_route import router as auth_router
+from app.routes.knowledge_vault_route import router as knowledge_vault_router
+from app.routes.profile_route import router as profile_router
 
 
 ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
@@ -30,6 +32,8 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(knowledge_vault_router)
+app.include_router(profile_router)
 
 
 # This API endpoint confirms that the authentication API is running.
