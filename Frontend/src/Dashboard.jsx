@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import KnowledgeVault from "./KnowledgeVault";
-import { getMyProfile, saveMyProfile } from "./api";
+import { getMyProfile, saveMyProfile } from "./badhon";
 
 
 // Future API endpoints can be connected to each feature from this list.

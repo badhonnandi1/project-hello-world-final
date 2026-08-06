@@ -6,7 +6,7 @@ import {
   getKnowledgeItem,
   getKnowledgeItems,
   updateKnowledgeItem,
-} from "./api";
+} from "./badhon";
 
 
 const categoryOptions = [
