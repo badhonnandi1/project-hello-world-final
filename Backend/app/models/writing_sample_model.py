@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, String, Text, func, text
+from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, Integer, String, Text, func, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -24,8 +24,8 @@ class WritingSample(Base):
         server_default=text("gen_random_uuid()"),
         index=True,
     )
-    user_id = Column(
-        UUID(as_uuid=True),
+     user_id = Column(
+        Integer,
         ForeignKey("users.id", ondelete="CASCADE"),
         nullable=False,
         index=True,

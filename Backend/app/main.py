@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-
+from app.routes.writing_sample_route import router as writing_sample_router
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -34,7 +34,7 @@ app.add_middleware(
 app.include_router(auth_router)
 app.include_router(knowledge_vault_router)
 app.include_router(profile_router)
-
+app.include_router(writing_sample_router)
 
 # This API endpoint confirms that the authentication API is running.
 @app.get("/")

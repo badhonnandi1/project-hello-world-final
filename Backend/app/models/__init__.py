@@ -6,3 +6,5 @@ from app.models.writing_sample_model import WritingSample
 from app.models.writing_analysis_model import WritingAnalysis
 from app.models.knowledge_vault_item_model import KnowledgeVaultItem
 from app.models.voice_profile_model import VoiceProfile
+from app.models.writing_analysis_model import WritingAnalysis
+from app.models.writing_sample_model import WritingSample
