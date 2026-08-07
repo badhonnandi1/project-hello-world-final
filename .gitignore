@@ -1,0 +1,53 @@
+# Environment variables and secrets
+Backend/.env
+Frontend/.env
+.env
+.env.*
+!.env.example
+
+# Python
+Backend/.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+.venv/
+venv/
+
+# React / Node
+Frontend/node_modules/
+Frontend/dist/
+node_modules/
+dist/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+pnpm-debug.log*
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# macOS
+.DS_Store
+
+# Logs
+*.log
+logs/
+
+# Uploaded files
+uploads/*
+!uploads/.gitkeep
+backend/uploads/*
+!backend/uploads/.gitkeep
+
+# Database files and dumps
+*.db
+*.sqlite3
+*.sql
+*.dump
