@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import KnowledgeVault from "./KnowledgeVault";
+import WritingAnalyzer from "./WritingAnalyzer";
 import { getMyProfile, saveMyProfile } from "./badhon";
 
 
@@ -231,7 +232,14 @@ function Dashboard({ user, onLogout }) {
         />
       );
     }
-
+    if (activePage === "writing-sample-analyzer") {
+      return (
+        <WritingAnalyzer
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
     if (activePage === "profile") {
       return renderProfile();
     }

@@ -153,3 +153,13 @@ export async function deleteKnowledgeItem(token, itemId) {
     },
   });
 }
+// This function sends a pasted writing sample to the analyzer and returns the results.
+export async function analyzeWritingSample(token, sampleData) {
+  return request("/writing-samples/analyze", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(sampleData),
+  });
+}
