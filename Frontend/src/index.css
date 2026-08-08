@@ -668,3 +668,156 @@ button:disabled {
     text-align: center;
   }
 }
+
+/* Guided Interview Feature Styles */
+.interview-layout {
+  display: flex;
+  height: calc(100vh - 170px);
+  margin: -32px -70px; /* Negate dashboard padding to allow full width */
+  background: #ffffff;
+}
+
+.interview-sidebar {
+  width: 260px;
+  background: #f4f6fb;
+  border-right: 1px solid #e0e5f2;
+  padding: 24px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.interview-sidebar-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 24px;
+  cursor: pointer;
+  color: #111111;
+  font-weight: bold;
+}
+
+.interview-sidebar-item:hover {
+  background: #e8ecf5;
+}
+
+.interview-sidebar-title {
+  font-size: 16px;
+}
+
+.interview-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.interview-messages {
+  flex: 1;
+  padding: 40px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.chat-bubble {
+  max-width: 60%;
+  padding: 16px 20px;
+  border-radius: 20px;
+  line-height: 1.5;
+  font-size: 15px;
+}
+
+.chat-bubble.ai {
+  align-self: flex-start;
+  background: #f8f1f1;
+  color: #111111;
+  border-bottom-left-radius: 4px;
+}
+
+.chat-bubble.user {
+  align-self: flex-end;
+  background: #e4a2a2;
+  color: #111111;
+  border-bottom-right-radius: 4px;
+}
+
+.interview-input-container {
+  padding: 20px 40px;
+  background: #ffffff;
+  display: flex;
+  justify-content: center;
+}
+
+.interview-input-form {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  background: #fff0f0;
+  border-radius: 999px;
+  padding: 6px 6px 6px 24px;
+  flex-direction: row;
+}
+
+.interview-text-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 16px;
+  color: #333;
+}
+
+.interview-text-input::placeholder {
+  color: #888;
+}
+
+.interview-text-input:focus {
+  border: none;
+  outline: none;
+}
+
+.interview-submit-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #f6caca;
+  color: #111;
+  border: none;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  margin-top: 0;
+  padding: 0;
+}
+
+.interview-submit-btn:hover {
+  background: #ebbaba;
+}
+
+.interview-submit-btn:disabled {
+  background: #f8e5e5;
+  color: #aaa;
+  cursor: not-allowed;
+}
+
+@media (max-width: 760px) {
+  .interview-layout {
+    margin: -32px -20px;
+    flex-direction: column;
+  }
+  .interview-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid #e0e5f2;
+    padding: 12px 0;
+  }
+  .interview-input-form {
+    padding: 6px 6px 6px 16px;
+  }
+}
+
