@@ -153,3 +153,37 @@ export async function deleteKnowledgeItem(token, itemId) {
     },
   });
 }
+
+
+// This function starts a new interview session.
+export async function startInterviewSession(token) {
+  return request("/interview/start", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function gets the current active interview session.
+export async function getCurrentInterviewSession(token) {
+  return request("/interview/current", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function submits an answer for a specific question in the interview.
+export async function submitInterviewAnswer(token, answerId, answerText) {
+  return request(`/interview/answer/${answerId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ answer_text: answerText }),
+  });
+}

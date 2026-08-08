@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import Dashboard from "./Dashboard";
-import { getCurrentUser, loginUser, registerUser } from "./api";
+import { getCurrentUser, loginUser, registerUser } from "./badhon";
 
 
 const emptyRegistrationForm = {

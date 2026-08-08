@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 
 import KnowledgeVault from "./KnowledgeVault";
+import GuidedInterview from "./GuidedInterview";
 import { getMyProfile, saveMyProfile } from "./badhon";
 
 
@@ -226,6 +227,15 @@ function Dashboard({ user, onLogout }) {
     if (activePage === "knowledge-vault") {
       return (
         <KnowledgeVault
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
+    if (activePage === "guided-interview") {
+      return (
+        <GuidedInterview
           token={token}
           onUnauthorized={handleSignOut}
         />
