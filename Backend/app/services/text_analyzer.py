@@ -1,4 +1,4 @@
-"""Pure-Python writing sample analyzer. """
+""" writing sample analyzer. """
 
 import re
 from collections import Counter
