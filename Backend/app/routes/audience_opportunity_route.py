@@ -34,7 +34,7 @@ def get_authenticated_account(
 
 
 # This API endpoint creates and analyzes an audience opportunity.
-@router.post("", response_model=AudienceOpportunityResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/analyze", response_model=AudienceOpportunityResponse, status_code=status.HTTP_201_CREATED)
 def create_item(
     opportunity_data: AudienceOpportunityCreate,
     authenticated_account=Depends(get_authenticated_account),
@@ -56,7 +56,7 @@ def list_items(
 
 
 # This API endpoint returns one owned opportunity.
-@router.get("/{opportunity_id}", response_model=AudienceOpportunityResponse)
+@router.get("/get/{opportunity_id}", response_model=AudienceOpportunityResponse)
 def read_item(
     opportunity_id: UUID,
     authenticated_account=Depends(get_authenticated_account),
@@ -66,7 +66,7 @@ def read_item(
 
 
 # This API endpoint updates one owned opportunity.
-@router.patch("/{opportunity_id}", response_model=AudienceOpportunityResponse)
+@router.patch("/update/{opportunity_id}", response_model=AudienceOpportunityResponse)
 def update_item(
     opportunity_id: UUID,
     opportunity_data: AudienceOpportunityUpdate,
@@ -77,7 +77,7 @@ def update_item(
 
 
 # This API endpoint deletes one owned opportunity.
-@router.delete("/{opportunity_id}")
+@router.delete("/delete/{opportunity_id}")
 def delete_item(
     opportunity_id: UUID,
     authenticated_account=Depends(get_authenticated_account),
