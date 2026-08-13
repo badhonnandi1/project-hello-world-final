@@ -1,4 +1,14 @@
 import { useEffect, useState } from "react";
+import {
+  ArrowLeft,
+  Edit3,
+  Eye,
+  Plus,
+  Save,
+  Search as SearchIcon,
+  Trash2,
+  X,
+} from "lucide-react";
 
 import {
   createKnowledgeItem,
@@ -266,26 +276,28 @@ function KnowledgeVault({ token, onUnauthorized }) {
 
   function renderMessages() {
     return (
-      <>
-        {successMessage && <p className="knowledge-message">{successMessage}</p>}
-        {error && <p className="knowledge-error">{error}</p>}
-      </>
+      <div aria-live="polite" className="space-y-3">
+        {successMessage && <p className="status-success">{successMessage}</p>}
+        {error && <p className="status-error">{error}</p>}
+      </div>
     );
   }
 
   function renderHeader() {
     return (
-      <header className="knowledge-header">
+      <header className="flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
         <div>
-          <h1>Knowledge Vault</h1>
-          <p className="dashboard-description">
+          <p className="eyebrow">Source Library</p>
+          <h1 className="page-title">Knowledge Vault</h1>
+          <p className="page-subtitle">
             Save and organize your stories, achievements, lessons, opinions, and facts.
           </p>
         </div>
 
         {mode === "list" && (
-          <button className="knowledge-add-button" type="button" onClick={openCreateMode}>
-            ⊕ Add Item
+          <button className="btn-primary shrink-0" type="button" onClick={openCreateMode}>
+            <Plus aria-hidden="true" className="h-4 w-4" />
+            Add Item
           </button>
         )}
       </header>
@@ -297,14 +309,18 @@ function KnowledgeVault({ token, onUnauthorized }) {
 
     return (
       <>
-        <div className="knowledge-toolbar">
-          <form className="knowledge-search-form" onSubmit={handleSearch}>
-            <label className="visually-hidden" htmlFor="knowledge-search-input">
+        <div className="ui-card grid gap-3 p-3 lg:grid-cols-[minmax(0,1fr)_12rem_12rem_auto]">
+          <form className="flex min-w-0 gap-2" onSubmit={handleSearch}>
+            <label className="sr-only" htmlFor="knowledge-search-input">
               Search your saved knowledge
             </label>
-            <div className="knowledge-search-input">
-              <span aria-hidden="true">🔍</span>
+            <div className="relative min-w-0 flex-1">
+              <SearchIcon
+                aria-hidden="true"
+                className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-400"
+              />
               <input
+                className="form-input pl-10"
                 id="knowledge-search-input"
                 type="search"
                 value={search}
@@ -312,11 +328,13 @@ function KnowledgeVault({ token, onUnauthorized }) {
                 placeholder="Search your saved knowledge"
               />
             </div>
-            <button type="submit">Search</button>
+            <button className="btn-secondary shrink-0" type="submit">
+              Search
+            </button>
           </form>
 
           <select
-            className="knowledge-filter"
+            className="form-input"
             value={categoryFilter}
             onChange={handleCategoryFilterChange}
             aria-label="Category"
@@ -329,7 +347,7 @@ function KnowledgeVault({ token, onUnauthorized }) {
           </select>
 
           <select
-            className="knowledge-filter"
+            className="form-input"
             value={confidentialityFilter}
             onChange={handleConfidentialityFilterChange}
             aria-label="Confidentiality"
@@ -341,36 +359,46 @@ function KnowledgeVault({ token, onUnauthorized }) {
           </select>
 
           {hasFilters && (
-            <button className="knowledge-clear-button" type="button" onClick={clearFilters}>
-              Clear Filters
+            <button className="btn-quiet" type="button" onClick={clearFilters}>
+              <X aria-hidden="true" className="h-4 w-4" />
+              Clear
             </button>
           )}
         </div>
 
-        {loading && <p>Loading knowledge items...</p>}
+        {loading && <p className="ui-card p-4 text-sm font-medium text-zinc-600">Loading knowledge items...</p>}
 
-        {!loading && items.length === 0 && <p className="knowledge-empty">No knowledge items found.</p>}
+        {!loading && items.length === 0 && (
+          <div className="ui-card p-8 text-center">
+            <BookOpen aria-hidden="true" className="mx-auto h-8 w-8 text-zinc-300" />
+            <p className="mt-3 text-sm font-semibold text-zinc-950">No knowledge items found</p>
+            <p className="mt-1 text-sm text-zinc-600">Add an item or clear filters to widen the results.</p>
+          </div>
+        )}
 
-        <div className="knowledge-list">
+        <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           {items.map((item) => (
-            <article className="knowledge-card" key={item.item_id}>
+            <article
+              className="ui-card flex min-h-[18rem] flex-col justify-between p-5 transition hover:border-cyan-200 hover:shadow-soft"
+              key={item.item_id}
+            >
               <div>
-                <div className="knowledge-card-header">
-                  <h2>{item.title}</h2>
-                  <span>{item.confidentiality_level || "private"}</span>
+                <div className="flex items-start justify-between gap-4">
+                  <h2 className="text-lg font-semibold leading-7 text-zinc-950">{item.title}</h2>
+                  <span className="tag-pill capitalize">{item.confidentiality_level || "private"}</span>
                 </div>
 
-                <p className="knowledge-card-content">{getContentPreview(item.content)}</p>
+                <p className="mt-4 text-sm leading-6 text-zinc-600">{getContentPreview(item.content)}</p>
 
-                <div className="knowledge-metadata">
-                  <span>{getCategoryLabel(item.category)}</span>
-                  <span>{formatDate(item.item_date)}</span>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <span className="tag-pill">{getCategoryLabel(item.category)}</span>
+                  <span className="tag-pill">{formatDate(item.item_date)}</span>
                 </div>
 
                 {item.tags && item.tags.length > 0 && (
-                  <div className="knowledge-tags">
+                  <div className="mt-4 flex flex-wrap gap-2">
                     {item.tags.map((tag) => (
-                      <span className="knowledge-tag" key={tag}>
+                      <span className="rounded-full bg-cyan-50 px-2.5 py-1 text-xs font-medium text-cyan-800" key={tag}>
                         {tag}
                       </span>
                     ))}
@@ -378,14 +406,17 @@ function KnowledgeVault({ token, onUnauthorized }) {
                 )}
               </div>
 
-              <div className="knowledge-card-actions">
-                <button type="button" onClick={() => openViewMode(item.item_id)}>
+              <div className="mt-6 flex flex-wrap gap-2">
+                <button className="btn-secondary flex-1" type="button" onClick={() => openViewMode(item.item_id)}>
+                  <Eye aria-hidden="true" className="h-4 w-4" />
                   View
                 </button>
-                <button type="button" onClick={() => openEditMode(item)}>
+                <button className="btn-secondary flex-1" type="button" onClick={() => openEditMode(item)}>
+                  <Edit3 aria-hidden="true" className="h-4 w-4" />
                   Edit
                 </button>
-                <button type="button" onClick={() => handleDelete(item.item_id)}>
+                <button className="btn-danger flex-1" type="button" onClick={() => handleDelete(item.item_id)}>
+                  <Trash2 aria-hidden="true" className="h-4 w-4" />
                   Delete
                 </button>
               </div>
@@ -400,13 +431,25 @@ function KnowledgeVault({ token, onUnauthorized }) {
     const isEditing = mode === "edit";
 
     return (
-      <section className="knowledge-form-card">
-        <h2>{isEditing ? "Edit Knowledge Item" : "Add Knowledge Item"}</h2>
+      <section className="ui-card max-w-3xl p-5 sm:p-6">
+        <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="eyebrow">{isEditing ? "Edit Source" : "New Source"}</p>
+            <h2 className="text-xl font-semibold text-zinc-950">
+              {isEditing ? "Edit Knowledge Item" : "Add Knowledge Item"}
+            </h2>
+          </div>
+          <button className="btn-secondary" type="button" onClick={openListMode}>
+            <ArrowLeft aria-hidden="true" className="h-4 w-4" />
+            Back
+          </button>
+        </div>
 
-        <form className="knowledge-form" onSubmit={handleSubmit}>
-          <div className="knowledge-form-group">
-            <label htmlFor="knowledge-title">Title</label>
+        <form className="space-y-5" onSubmit={handleSubmit}>
+          <div className="space-y-2">
+            <label className="field-label" htmlFor="knowledge-title">Title</label>
             <input
+              className="form-input"
               id="knowledge-title"
               name="title"
               type="text"
@@ -416,36 +459,41 @@ function KnowledgeVault({ token, onUnauthorized }) {
             />
           </div>
 
-          <div className="knowledge-form-group">
-            <label htmlFor="knowledge-category">Category</label>
-            <select
-              id="knowledge-category"
-              name="category"
-              value={formData.category}
-              onChange={handleFormChange}
-            >
-              {categoryOptions.map((category) => (
-                <option key={category.value} value={category.value}>
-                  {category.value ? category.label : "Choose a category"}
-                </option>
-              ))}
-            </select>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="space-y-2">
+              <label className="field-label" htmlFor="knowledge-category">Category</label>
+              <select
+                className="form-input"
+                id="knowledge-category"
+                name="category"
+                value={formData.category}
+                onChange={handleFormChange}
+              >
+                {categoryOptions.map((category) => (
+                  <option key={category.value} value={category.value}>
+                    {category.value ? category.label : "Choose a category"}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-2">
+              <label className="field-label" htmlFor="knowledge-date">Date</label>
+              <input
+                className="form-input"
+                id="knowledge-date"
+                name="item_date"
+                type="date"
+                value={formData.item_date}
+                onChange={handleFormChange}
+              />
+            </div>
           </div>
 
-          <div className="knowledge-form-group">
-            <label htmlFor="knowledge-date">Date</label>
-            <input
-              id="knowledge-date"
-              name="item_date"
-              type="date"
-              value={formData.item_date}
-              onChange={handleFormChange}
-            />
-          </div>
-
-          <div className="knowledge-form-group">
-            <label htmlFor="knowledge-content">Content</label>
+          <div className="space-y-2">
+            <label className="field-label" htmlFor="knowledge-content">Content</label>
             <textarea
+              className="form-input min-h-48 resize-y leading-6"
               id="knowledge-content"
               name="content"
               rows="8"
@@ -455,9 +503,10 @@ function KnowledgeVault({ token, onUnauthorized }) {
             />
           </div>
 
-          <div className="knowledge-form-group">
-            <label htmlFor="knowledge-tags">Tags</label>
+          <div className="space-y-2">
+            <label className="field-label" htmlFor="knowledge-tags">Tags</label>
             <input
+              className="form-input"
               id="knowledge-tags"
               name="tagsText"
               type="text"
@@ -467,15 +516,15 @@ function KnowledgeVault({ token, onUnauthorized }) {
             />
           </div>
 
-          <div className="knowledge-form-group">
-            <span className="knowledge-label">Confidentiality level</span>
-            <div className="confidentiality-buttons">
+          <div className="space-y-3">
+            <span className="field-label">Confidentiality level</span>
+            <div className="flex flex-wrap gap-2" aria-label="Confidentiality level">
               {confidentialityOptions.map((level) => (
                 <button
                   className={
                     formData.confidentiality_level === level
-                      ? "confidentiality-button active"
-                      : "confidentiality-button"
+                      ? "btn-primary capitalize"
+                      : "btn-secondary capitalize"
                   }
                   key={level}
                   type="button"
@@ -486,18 +535,20 @@ function KnowledgeVault({ token, onUnauthorized }) {
                     })
                   }
                 >
-                  {level.charAt(0).toUpperCase() + level.slice(1)}
+                  {level}
                 </button>
               ))}
             </div>
           </div>
 
-          <div className="knowledge-form-actions">
-            <button type="submit" disabled={saving}>
-              {saving ? "Saving..." : "Submit"}
-            </button>
-            <button type="button" onClick={openListMode}>
+          <div className="flex flex-col gap-3 border-t border-zinc-200 pt-5 sm:flex-row sm:justify-end">
+            <button className="btn-secondary" type="button" onClick={openListMode}>
+              <X aria-hidden="true" className="h-4 w-4" />
               Cancel
+            </button>
+            <button className="btn-primary" type="submit" disabled={saving}>
+              <Save aria-hidden="true" className="h-4 w-4" />
+              {saving ? "Saving..." : "Submit"}
             </button>
           </div>
         </form>
@@ -507,36 +558,45 @@ function KnowledgeVault({ token, onUnauthorized }) {
 
   function renderView() {
     return (
-      <article className="knowledge-detail-card">
-        <h2>{selectedItem.title}</h2>
-        <p>{selectedItem.content}</p>
+      <article className="ui-card max-w-4xl p-5 sm:p-6">
+        <div className="flex flex-col gap-3 border-b border-zinc-200 pb-5 sm:flex-row sm:items-start sm:justify-between">
+          <div>
+            <p className="eyebrow">Knowledge Item</p>
+            <h2 className="text-2xl font-semibold tracking-normal text-zinc-950">{selectedItem.title}</h2>
+          </div>
+          <span className="tag-pill capitalize">{selectedItem.confidentiality_level || "private"}</span>
+        </div>
 
-        <div className="knowledge-metadata">
-          <span>Category: {getCategoryLabel(selectedItem.category)}</span>
-          <span>Date: {formatDate(selectedItem.item_date)}</span>
-          <span>Confidentiality: {selectedItem.confidentiality_level || "private"}</span>
-          <span>Created: {formatDate(selectedItem.created_at)}</span>
-          <span>Updated: {formatDate(selectedItem.updated_at)}</span>
+        <p className="mt-6 whitespace-pre-wrap text-sm leading-7 text-zinc-700">{selectedItem.content}</p>
+
+        <div className="mt-6 flex flex-wrap gap-2">
+          <span className="tag-pill">Category: {getCategoryLabel(selectedItem.category)}</span>
+          <span className="tag-pill">Date: {formatDate(selectedItem.item_date)}</span>
+          <span className="tag-pill">Created: {formatDate(selectedItem.created_at)}</span>
+          <span className="tag-pill">Updated: {formatDate(selectedItem.updated_at)}</span>
         </div>
 
         {selectedItem.tags && selectedItem.tags.length > 0 && (
-          <div className="knowledge-tags">
+          <div className="mt-4 flex flex-wrap gap-2">
             {selectedItem.tags.map((tag) => (
-              <span className="knowledge-tag" key={tag}>
+              <span className="rounded-full bg-cyan-50 px-2.5 py-1 text-xs font-medium text-cyan-800" key={tag}>
                 {tag}
               </span>
             ))}
           </div>
         )}
 
-        <div className="knowledge-card-actions">
-          <button type="button" onClick={openListMode}>
+        <div className="mt-8 flex flex-col gap-3 border-t border-zinc-200 pt-5 sm:flex-row sm:justify-end">
+          <button className="btn-secondary" type="button" onClick={openListMode}>
+            <ArrowLeft aria-hidden="true" className="h-4 w-4" />
             Back
           </button>
-          <button type="button" onClick={() => openEditMode(selectedItem)}>
+          <button className="btn-secondary" type="button" onClick={() => openEditMode(selectedItem)}>
+            <Edit3 aria-hidden="true" className="h-4 w-4" />
             Edit
           </button>
-          <button type="button" onClick={() => handleDelete(selectedItem.item_id)}>
+          <button className="btn-danger" type="button" onClick={() => handleDelete(selectedItem.item_id)}>
+            <Trash2 aria-hidden="true" className="h-4 w-4" />
             Delete
           </button>
         </div>
@@ -545,7 +605,7 @@ function KnowledgeVault({ token, onUnauthorized }) {
   }
 
   return (
-    <section className="knowledge-vault-page">
+    <section className="space-y-6">
       {renderHeader()}
       {renderMessages()}
       {mode === "list" && renderList()}

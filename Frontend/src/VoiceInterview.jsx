@@ -1,4 +1,12 @@
 import { useEffect, useRef, useState } from "react";
+import {
+  Edit3,
+  FileText,
+  Mic,
+  RefreshCw,
+  Save,
+  Square,
+} from "lucide-react";
 
 import {
   getLatestVoiceInterview,
@@ -271,9 +279,12 @@ function VoiceInterview({ token, onUnauthorized }) {
 
   if (loading) {
     return (
-      <section>
-        <h1>Voice Interview</h1>
-        <p>Loading your latest interview...</p>
+      <section className="space-y-6">
+        <header>
+          <p className="eyebrow">Voice Capture</p>
+          <h1 className="page-title">Voice Interview</h1>
+        </header>
+        <p className="ui-card p-5 text-sm font-medium text-zinc-600">Loading your latest interview...</p>
       </section>
     );
   }
@@ -283,179 +294,204 @@ function VoiceInterview({ token, onUnauthorized }) {
   // ---------------------------------------------------------
 
   return (
-    <section className="voice-interview-page">
-
-      <h1>Voice Interview</h1>
-
-      <p className="dashboard-description">
-        Record your thoughts naturally and let GhostWriter AI
-        convert your voice into a transcript.
-      </p>
-
-      {message && (
-        <p className="knowledge-message">
-          {message}
+    <section className="space-y-6">
+      <header>
+        <p className="eyebrow">Voice Capture</p>
+        <h1 className="page-title">Voice Interview</h1>
+        <p className="page-subtitle">
+          Record your thoughts naturally and let GhostWriter AI convert your voice into a transcript.
         </p>
-      )}
+      </header>
 
-      {error && (
-        <p className="knowledge-error">
-          {error}
-        </p>
-      )}
-
-      {/* -------------------------------------------------- */}
-      {/* RECORDING CARD */}
-      {/* -------------------------------------------------- */}
-
-      <div className="voice-interview-card">
-
-        <h2>Record Interview</h2>
-
-        <p>
-          Click the button below and speak naturally.
-        </p>
-
-        {!recording ? (
-          <button
-            type="button"
-            onClick={startRecording}
-            disabled={transcribing || saving}
-          >
-            🎙️ Start Recording
-          </button>
-        ) : (
-          <button
-            type="button"
-            onClick={stopRecording}
-          >
-            ⏹ Stop Recording
-          </button>
-        )}
-
-        {recording && (
-          <p className="recording-status">
-            🔴 Recording in progress...
+      <div aria-live="polite" className="space-y-3">
+        {message && (
+          <p className="status-success">
+            {message}
           </p>
         )}
 
-        {transcribing && (
-          <p>
-            Converting your audio and generating transcript...
+        {error && (
+          <p className="status-error">
+            {error}
           </p>
         )}
-
       </div>
 
-      {/* -------------------------------------------------- */}
-      {/* TRANSCRIPT CARD */}
-      {/* -------------------------------------------------- */}
+      <div className="grid gap-4 xl:grid-cols-[20rem_minmax(0,1fr)]">
+        <aside className="space-y-4">
+          <section className="ui-card p-5">
+            <div className="flex items-center gap-3">
+              <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-zinc-950 text-cyan-300">
+                <Mic aria-hidden="true" className="h-5 w-5" />
+              </div>
+              <div>
+                <h2 className="section-title">Record Interview</h2>
+                <p className="text-sm text-zinc-600">Capture a fresh voice note.</p>
+              </div>
+            </div>
 
-      {transcript && (
-        <div className="voice-interview-card">
+            <p className="mt-5 text-sm leading-6 text-zinc-600">
+              Click the button below and speak naturally. You can review the transcript before saving.
+            </p>
 
-          <div className="voice-interview-header">
-            <h2>
-              {interview
-                ? "Latest Interview"
-                : "New Transcript"}
-            </h2>
-          </div>
-
-          <textarea
-            className="voice-interview-textarea"
-            value={transcript}
-            onChange={(event) =>
-              setTranscript(event.target.value)
-            }
-            readOnly={!editing && !!interview}
-            rows={12}
-          />
-
-          {/* Existing interview */}
-          {interview && !editing && (
-            <div className="voice-interview-actions">
-
+            {!recording ? (
               <button
-                type="button"
-                onClick={() => {
-                  setEditing(true);
-                  setMessage("");
-                  setError("");
-                }}
-              >
-                Edit Transcript
-              </button>
-
-              <button
+                className="btn-primary mt-5 w-full"
                 type="button"
                 onClick={startRecording}
-                disabled={recording || transcribing}
+                disabled={transcribing || saving}
               >
-                🎙️ Record New Interview
+                <Mic aria-hidden="true" className="h-4 w-4" />
+                Start Recording
               </button>
+            ) : (
+              <button
+                className="btn-danger mt-5 w-full"
+                type="button"
+                onClick={stopRecording}
+              >
+                <Square aria-hidden="true" className="h-4 w-4" />
+                Stop Recording
+              </button>
+            )}
 
+            {recording && (
+              <p className="mt-4 flex items-center gap-2 text-sm font-semibold text-rose-700">
+                <span className="h-2.5 w-2.5 rounded-full bg-rose-500 animate-pulse" />
+                Recording in progress
+              </p>
+            )}
+
+            {transcribing && (
+              <p className="mt-4 text-sm font-medium text-zinc-600">
+                Converting your audio and generating transcript...
+              </p>
+            )}
+          </section>
+
+          <section className="ui-card p-5">
+            <h2 className="section-title">Workflow</h2>
+            <div className="mt-4 space-y-3">
+              {[
+                ["Record", recording ? "In progress" : "Ready"],
+                ["Transcribe", transcribing ? "Working" : transcript ? "Complete" : "Waiting"],
+                ["Save", interview ? "Saved" : transcript ? "Ready" : "Waiting"],
+              ].map(([label, status]) => (
+                <div className="flex items-center justify-between gap-3 rounded-lg bg-zinc-50 px-3 py-2" key={label}>
+                  <span className="text-sm font-medium text-zinc-700">{label}</span>
+                  <span className="text-xs font-semibold text-zinc-500">{status}</span>
+                </div>
+              ))}
+            </div>
+          </section>
+        </aside>
+
+        <section className="ui-card min-h-[32rem] p-5 sm:p-6">
+          {transcript ? (
+            <>
+              <div className="flex flex-col gap-3 border-b border-zinc-200 pb-5 sm:flex-row sm:items-center sm:justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-cyan-100 text-cyan-700">
+                    <FileText aria-hidden="true" className="h-5 w-5" />
+                  </div>
+                  <div>
+                    <h2 className="section-title">
+                      {interview
+                        ? "Latest Interview"
+                        : "New Transcript"}
+                    </h2>
+                    <p className="text-sm text-zinc-600">
+                      {editing || !interview ? "Review and refine the transcript." : "Saved transcript is read-only until you edit."}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              <textarea
+                className="form-input mt-5 min-h-[22rem] resize-y leading-7"
+                value={transcript}
+                onChange={(event) =>
+                  setTranscript(event.target.value)
+                }
+                readOnly={!editing && !!interview}
+                rows={12}
+              />
+
+              {interview && !editing && (
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                  <button
+                    className="btn-secondary"
+                    type="button"
+                    onClick={() => {
+                      setEditing(true);
+                      setMessage("");
+                      setError("");
+                    }}
+                  >
+                    <Edit3 aria-hidden="true" className="h-4 w-4" />
+                    Edit Transcript
+                  </button>
+
+                  <button
+                    className="btn-primary"
+                    type="button"
+                    onClick={startRecording}
+                    disabled={recording || transcribing}
+                  >
+                    <RefreshCw aria-hidden="true" className="h-4 w-4" />
+                    Record New Interview
+                  </button>
+                </div>
+              )}
+
+              {interview && editing && (
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                  <button
+                    className="btn-secondary"
+                    type="button"
+                    onClick={cancelEdit}
+                    disabled={saving}
+                  >
+                    Cancel
+                  </button>
+
+                  <button
+                    className="btn-primary"
+                    type="button"
+                    onClick={handleUpdateInterview}
+                    disabled={saving}
+                  >
+                    <Save aria-hidden="true" className="h-4 w-4" />
+                    {saving ? "Saving..." : "Save Changes"}
+                  </button>
+                </div>
+              )}
+
+              {!interview && !transcribing && (
+                <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:justify-end">
+                  <button
+                    className="btn-primary"
+                    type="button"
+                    onClick={handleSaveNewInterview}
+                    disabled={saving}
+                  >
+                    <Save aria-hidden="true" className="h-4 w-4" />
+                    {saving ? "Saving..." : "Save Interview"}
+                  </button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="flex min-h-[28rem] flex-col items-center justify-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-8 text-center">
+              <Mic aria-hidden="true" className="h-9 w-9 text-zinc-300" />
+              <h2 className="mt-4 text-lg font-semibold text-zinc-950">No Interview Yet</h2>
+              <p className="mt-2 max-w-md text-sm leading-6 text-zinc-600">
+                You have not recorded a voice interview yet. Start recording to create your first one.
+              </p>
             </div>
           )}
-
-          {/* Editing existing interview */}
-          {interview && editing && (
-            <div className="voice-interview-actions">
-
-              <button
-                type="button"
-                onClick={handleUpdateInterview}
-                disabled={saving}
-              >
-                {saving ? "Saving..." : "Save Changes"}
-              </button>
-
-              <button
-                type="button"
-                onClick={cancelEdit}
-                disabled={saving}
-              >
-                Cancel
-              </button>
-
-            </div>
-          )}
-
-          {/* New interview after recording */}
-          {!interview && !transcribing && (
-            <div className="voice-interview-actions">
-
-              <button
-                type="button"
-                onClick={handleSaveNewInterview}
-                disabled={saving}
-              >
-                {saving ? "Saving..." : "Save Interview"}
-              </button>
-
-            </div>
-          )}
-
-        </div>
-      )}
-
-      {/* -------------------------------------------------- */}
-      {/* EMPTY STATE */}
-      {/* -------------------------------------------------- */}
-
-      {!transcript && !transcribing && (
-        <div className="voice-interview-card">
-
-          <h2>No Interview Yet</h2>
-
-          <p>
-            You haven't recorded a voice interview yet.
-            Start recording to create your first one.
-          </p>
-
-        </div>
-      )}
-
+        </section>
+      </div>
     </section>
   );
 }
