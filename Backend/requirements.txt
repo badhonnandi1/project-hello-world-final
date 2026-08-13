@@ -4,5 +4,8 @@ sqlalchemy
 psycopg[binary]
 python-dotenv
 pydantic
+requests
 pwdlib[argon2]
 PyJWT
+google-genai
+python-multipart

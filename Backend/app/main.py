@@ -1,6 +1,7 @@
 import os
 from pathlib import Path
 from app.routes.writing_sample_route import router as writing_sample_router
+
 from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -9,9 +10,11 @@ from app.db import Base, engine
 import app.models
 from app.models.user_model import UserAuth
 from app.routes.auth_route import router as auth_router
+from app.routes.audience_opportunity_route import router as audience_opportunity_router
 from app.routes.knowledge_vault_route import router as knowledge_vault_router
 from app.routes.profile_route import router as profile_router
 from app.routes.interview_route import router as interview_router
+from app.routes.voice_interview_route import router as voice_interview_router
 
 
 ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
@@ -33,10 +36,12 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(audience_opportunity_router)
 app.include_router(knowledge_vault_router)
 app.include_router(profile_router)
 app.include_router(writing_sample_router)
 app.include_router(interview_router)
+app.include_router(voice_interview_router)
 
 # This API endpoint confirms that the authentication API is running.
 @app.get("/")

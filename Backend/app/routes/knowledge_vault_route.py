@@ -33,7 +33,7 @@ def get_authenticated_account(
 
 
 # This API endpoint creates a Knowledge Vault item for the logged-in user.
-@router.post("", response_model=KnowledgeVaultResponse, status_code=status.HTTP_201_CREATED)
+@router.post("/create", response_model=KnowledgeVaultResponse, status_code=status.HTTP_201_CREATED)
 def create_item(
     item_data: KnowledgeVaultCreate,
     authenticated_account=Depends(get_authenticated_account),
@@ -43,7 +43,7 @@ def create_item(
 
 
 # This API endpoint lists the logged-in user's Knowledge Vault items.
-@router.get("", response_model=list[KnowledgeVaultResponse])
+@router.get("/get", response_model=list[KnowledgeVaultResponse])
 def list_items(
     search: str | None = Query(default=None),
     category: str | None = Query(default=None),
@@ -55,7 +55,7 @@ def list_items(
 
 
 # This API endpoint returns one owned Knowledge Vault item.
-@router.get("/{item_id}", response_model=KnowledgeVaultResponse)
+@router.get("/get/{item_id}", response_model=KnowledgeVaultResponse)
 def read_item(
     item_id: UUID,
     authenticated_account=Depends(get_authenticated_account),
@@ -65,7 +65,7 @@ def read_item(
 
 
 # This API endpoint updates one owned Knowledge Vault item.
-@router.put("/{item_id}", response_model=KnowledgeVaultResponse)
+@router.put("/update/{item_id}", response_model=KnowledgeVaultResponse)
 def update_item(
     item_id: UUID,
     item_data: KnowledgeVaultUpdate,
@@ -76,7 +76,7 @@ def update_item(
 
 
 # This API endpoint deletes one owned Knowledge Vault item.
-@router.delete("/{item_id}")
+@router.delete("/delete/{item_id}")
 def delete_item(
     item_id: UUID,
     authenticated_account=Depends(get_authenticated_account),

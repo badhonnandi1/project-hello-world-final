@@ -98,7 +98,7 @@ export async function getKnowledgeItems(token, filters = {}) {
   }
 
   const queryString = params.toString();
-  const path = queryString ? `/knowledge-vault?${queryString}` : "/knowledge-vault";
+  const path = queryString ? `/knowledge-vault/get?${queryString}` : "/knowledge-vault/get";
 
   return request(path, {
     method: "GET",
@@ -111,7 +111,7 @@ export async function getKnowledgeItems(token, filters = {}) {
 
 // This function creates a new Knowledge Vault item.
 export async function createKnowledgeItem(token, itemData) {
-  return request("/knowledge-vault", {
+  return request("/knowledge-vault/create", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -123,7 +123,7 @@ export async function createKnowledgeItem(token, itemData) {
 
 // This function loads one full Knowledge Vault item.
 export async function getKnowledgeItem(token, itemId) {
-  return request(`/knowledge-vault/${itemId}`, {
+  return request(`/knowledge-vault/get/${itemId}`, {
     method: "GET",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -134,7 +134,7 @@ export async function getKnowledgeItem(token, itemId) {
 
 // This function updates an existing Knowledge Vault item.
 export async function updateKnowledgeItem(token, itemId, itemData) {
-  return request(`/knowledge-vault/${itemId}`, {
+  return request(`/knowledge-vault/update/${itemId}`, {
     method: "PUT",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -146,7 +146,92 @@ export async function updateKnowledgeItem(token, itemId, itemData) {
 
 // This function deletes an existing Knowledge Vault item.
 export async function deleteKnowledgeItem(token, itemId) {
-  return request(`/knowledge-vault/${itemId}`, {
+  return request(`/knowledge-vault/delete/${itemId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function loads audience opportunities with optional filters.
+export async function getAudienceOpportunities(token, filters = {}) {
+  const params = new URLSearchParams();
+
+  if (filters.status) {
+    params.append("status", filters.status);
+  }
+
+  if (filters.type) {
+    params.append("type", filters.type);
+  }
+
+  if (filters.priority) {
+    params.append("priority", filters.priority);
+  }
+
+  const queryString = params.toString();
+  const path = queryString ? `/api/opportunities?${queryString}` : "/api/opportunities";
+
+  return request(path, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function creates and analyzes one audience opportunity.
+export async function createAudienceOpportunity(token, opportunityData) {
+  return request("/api/opportunities/analyze", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(opportunityData),
+  });
+}
+
+
+// This function loads one full audience opportunity.
+export async function getAudienceOpportunity(token, opportunityId) {
+  return request(`/api/opportunities/get/${opportunityId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function updates an existing audience opportunity.
+export async function updateAudienceOpportunity(token, opportunityId, opportunityData) {
+  return request(`/api/opportunities/update/${opportunityId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(opportunityData),
+  });
+}
+
+
+// This function asks the backend to rerun the AI analysis for an opportunity.
+export async function reanalyzeAudienceOpportunity(token, opportunityId) {
+  return request(`/api/opportunities/${opportunityId}/reanalyze`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function deletes an existing audience opportunity.
+export async function deleteAudienceOpportunity(token, opportunityId) {
+  return request(`/api/opportunities/delete/${opportunityId}`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,

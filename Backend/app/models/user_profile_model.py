@@ -72,9 +72,20 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+    audience_opportunities = relationship(
+        "AudienceOpportunity",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
     voice_profile = relationship(
         "VoiceProfile",
         back_populates="user",
         uselist=False,
+        cascade="all, delete-orphan",
+    )
+    
+    voice_interviews = relationship(
+        "VoiceInterview",
+        back_populates="user",
         cascade="all, delete-orphan",
     )
