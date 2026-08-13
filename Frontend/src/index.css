@@ -668,6 +668,7 @@ button:disabled {
     text-align: center;
   }
 }
+<<<<<<< HEAD
 
 <<<<<<< HEAD
 /* Guided Interview Feature Styles */
@@ -1037,4 +1038,111 @@ button:disabled {
   margin-top: 16px;
   font-weight: 600;
 }
->>>>>>> origin/prithula
+
+/* ---------- Writing Sample Analyzer ---------- */
+.analyzer-page {
+  max-width: 1100px;
+}
+
+.analyzer-form-card {
+  max-width: 760px;
+  padding: 28px;
+  background: #f7f2f2;
+  border: 1px solid #ead6d6;
+  border-radius: 18px;
+}
+
+.analyzer-form-card textarea {
+  width: 100%;
+  padding: 11px 12px;
+  border: 1px solid #b9c5d4;
+  border-radius: 8px;
+  background: #ffffff;
+  resize: vertical;
+}
+
+.analyzer-word-count {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.word-count-ok {
+  padding: 5px 10px;
+  background: #e8f7ee;
+  color: #166534;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.word-count-bad {
+  padding: 5px 10px;
+  background: #fee2e2;
+  color: #b91c1c;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.analyzer-submit {
+  width: 100%;
+  margin-top: 12px;
+  padding: 12px 20px;
+  background: #1688f8;
+  color: #ffffff;
+  border-radius: 999px;
+}
+
+.analyzer-submit:hover {
+  background: #0f73d3;
+}
+
+.analyzer-submit:disabled {
+  background: #91a9d8;
+  cursor: not-allowed;
+}
+
+.analyzer-results h2 {
+  margin: 32px 0 16px;
+}
+
+.analyzer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 18px;
+}
+
+.analyzer-card {
+  padding: 22px;
+  background: #f7f2f2;
+  border: 1px solid #ead6d6;
+  border-radius: 18px;
+}
+
+.analyzer-card h3 {
+  margin: 0 0 12px;
+  font-size: 16px;
+}
+
+.analyzer-big-number {
+  margin: 0 0 10px;
+  font-size: 34px;
+  font-weight: 700;
+  color: #1688f8;
+}
+
+.analyzer-big-number small {
+  font-size: 14px;
+  color: #6b7280;
+}
+
+.analyzer-issue-list {
+  margin: 10px 0 0;
+  padding-left: 18px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+.analyzer-profile-card {
+  margin-top: 18px;
+}

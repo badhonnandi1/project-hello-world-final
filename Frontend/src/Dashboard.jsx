@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-
 import KnowledgeVault from "./KnowledgeVault";
-import GuidedInterview from "./GuidedInterview";
+import GuidedInterview from "./GuidedInterview"
+import WritingAnalyzer from "./WritingAnalyzer";
 import { getMyProfile, saveMyProfile } from "./badhon";
 import VoiceProfile from "./VoiceProfile";
 import VoiceInterview from "./VoiceInterview";
@@ -12,7 +12,7 @@ const features = [
   { id: "guided-interview", name: "Guided Interview" },
   { id: "knowledge-vault", name: "Knowledge Vault" },
   { id: "campaign-management", name: "Campaign Management" },
-  { id: "subscription-management", name: "Subscription Management" },
+  { id: "subscription-management", name: "Subscription Management" },git
   { id: "voice-interview", name: "Voice Interview" },
   { id: "rag-retrieval", name: "RAG Retrieval" },
   { id: "content-plan-generator", name: "Content Plan Generator" },
@@ -234,18 +234,22 @@ function Dashboard({ user, onLogout }) {
         />
       );
     }
-<<<<<<< HEAD
+
 
     if (activePage === "guided-interview") {
       return (
         <GuidedInterview
+
+    if (activePage === "writing-sample-analyzer") {
+      return (
+        <WritingAnalyzer
+
           token={token}
           onUnauthorized={handleSignOut}
         />
       );
     }
 
-=======
     if (activePage === "personal-voice-profile") {
       return (
         <VoiceProfile
@@ -262,7 +266,7 @@ function Dashboard({ user, onLogout }) {
         />
        );
     }  
->>>>>>> origin/prithula
+
     if (activePage === "profile") {
       return renderProfile();
     }
