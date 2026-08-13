@@ -172,7 +172,6 @@ function Dashboard({ user, onLogout }) {
           full_name: savedProfile.full_name,
           email: savedProfile.email,
         });
-        setActivePage("home");
       } catch (error) {
         if (error.status === 404) {
           setActivePage("profile");
