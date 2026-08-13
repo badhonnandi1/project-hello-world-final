@@ -78,3 +78,9 @@ class User(Base):
         uselist=False,
         cascade="all, delete-orphan",
     )
+    
+    voice_interviews = relationship(
+        "VoiceInterview",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )

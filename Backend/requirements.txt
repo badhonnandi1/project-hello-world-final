@@ -6,3 +6,5 @@ python-dotenv
 pydantic
 pwdlib[argon2]
 PyJWT
+google-genai
+python-multipart

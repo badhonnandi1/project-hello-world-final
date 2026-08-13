@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import KnowledgeVault from "./KnowledgeVault";
 import GuidedInterview from "./GuidedInterview";
 import { getMyProfile, saveMyProfile } from "./badhon";
+import VoiceProfile from "./VoiceProfile";
+import VoiceInterview from "./VoiceInterview";
 
 
 // Future API endpoints can be connected to each feature from this list.
@@ -232,6 +234,7 @@ function Dashboard({ user, onLogout }) {
         />
       );
     }
+<<<<<<< HEAD
 
     if (activePage === "guided-interview") {
       return (
@@ -242,6 +245,24 @@ function Dashboard({ user, onLogout }) {
       );
     }
 
+=======
+    if (activePage === "personal-voice-profile") {
+      return (
+        <VoiceProfile
+           token={token}
+           onUnauthorized={handleSignOut}
+        />
+      );
+    }
+    if (activePage === "voice-interview") {
+      return (
+        <VoiceInterview
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+       );
+    }  
+>>>>>>> origin/prithula
     if (activePage === "profile") {
       return renderProfile();
     }
