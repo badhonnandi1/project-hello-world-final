@@ -155,6 +155,91 @@ export async function deleteKnowledgeItem(token, itemId) {
 }
 
 
+// This function loads audience opportunities with optional filters.
+export async function getAudienceOpportunities(token, filters = {}) {
+  const params = new URLSearchParams();
+
+  if (filters.status) {
+    params.append("status", filters.status);
+  }
+
+  if (filters.type) {
+    params.append("type", filters.type);
+  }
+
+  if (filters.priority) {
+    params.append("priority", filters.priority);
+  }
+
+  const queryString = params.toString();
+  const path = queryString ? `/api/opportunities?${queryString}` : "/api/opportunities";
+
+  return request(path, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function creates and analyzes one audience opportunity.
+export async function createAudienceOpportunity(token, opportunityData) {
+  return request("/api/opportunities", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(opportunityData),
+  });
+}
+
+
+// This function loads one full audience opportunity.
+export async function getAudienceOpportunity(token, opportunityId) {
+  return request(`/api/opportunities/${opportunityId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function updates an existing audience opportunity.
+export async function updateAudienceOpportunity(token, opportunityId, opportunityData) {
+  return request(`/api/opportunities/${opportunityId}`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(opportunityData),
+  });
+}
+
+
+// This function asks the backend to rerun the AI analysis for an opportunity.
+export async function reanalyzeAudienceOpportunity(token, opportunityId) {
+  return request(`/api/opportunities/${opportunityId}/reanalyze`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function deletes an existing audience opportunity.
+export async function deleteAudienceOpportunity(token, opportunityId) {
+  return request(`/api/opportunities/${opportunityId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
 // This function starts a new interview session.
 export async function startInterviewSession(token) {
   return request("/interview/start", {

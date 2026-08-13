@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 
 import KnowledgeVault from "./KnowledgeVault";
+import AudienceOpportunities from "./AudienceOpportunities";
 import GuidedInterview from "./GuidedInterview";
 import { getMyProfile, saveMyProfile } from "./badhon";
 import VoiceProfile from "./VoiceProfile";
@@ -48,6 +49,12 @@ const workspaceNavigation = [
     name: "Knowledge Vault",
     icon: BookOpen,
     description: "Store stories, lessons, facts, and reusable context.",
+  },
+  {
+    id: "audience-opportunities",
+    name: "Audience Opportunities",
+    icon: ClipboardList,
+    description: "Turn audience questions and objections into content ideas.",
   },
   {
     id: "campaign-management",
@@ -377,8 +384,8 @@ function Dashboard({ user, onLogout }) {
     const quickActions = [
       workspaceNavigation[1],
       workspaceNavigation[2],
-      workspaceNavigation[5],
-      workspaceNavigation[7],
+      workspaceNavigation[3],
+      workspaceNavigation[6],
     ];
 
     return (
@@ -608,6 +615,15 @@ function Dashboard({ user, onLogout }) {
     if (activePage === "knowledge-vault") {
       return (
         <KnowledgeVault
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
+    if (activePage === "audience-opportunities") {
+      return (
+        <AudienceOpportunities
           token={token}
           onUnauthorized={handleSignOut}
         />
