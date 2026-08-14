@@ -250,7 +250,6 @@ export async function startInterviewSession(token) {
   });
 }
 
-
 // This function gets the current active interview session.
 export async function getCurrentInterviewSession(token) {
   return request("/interview/current", {
@@ -260,7 +259,6 @@ export async function getCurrentInterviewSession(token) {
     },
   });
 }
-
 
 // This function submits an answer for a specific question in the interview.
 export async function submitInterviewAnswer(token, answerId, answerText) {

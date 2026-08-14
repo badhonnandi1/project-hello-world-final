@@ -10,3 +10,7 @@ from app.models.voice_profile_model import VoiceProfile
 from app.models.writing_analysis_model import WritingAnalysis
 from app.models.writing_sample_model import WritingSample
 from app.models.voice_interview_model import VoiceInterview
+from app.models.content_plan_model import ContentPlan
+from app.models.writing_style_preset_model import StylePreset
+from app.models.style_preset_archetype_model import StylePresetArchetype
+
