@@ -29,6 +29,7 @@ import GuidedInterview from "./GuidedInterview";
 import { getMyProfile, saveMyProfile } from "./badhon";
 import VoiceProfile from "./VoiceProfile";
 import VoiceInterview from "./VoiceInterview";
+import WritingStylePresets from "./WritingStylePresets";
 
 
 const workspaceNavigation = [
@@ -653,6 +654,14 @@ function Dashboard({ user, onLogout }) {
         <VoiceInterview
           token={token}
           onUnauthorized={handleSignOut}
+        />
+      );
+    }
+    if (activePage === "writing-style-presets") {
+      return (
+        <WritingStylePresets
+           token={token}
+           onUnauthorized={handleSignOut}
         />
       );
     }
