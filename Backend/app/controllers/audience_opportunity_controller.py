@@ -18,14 +18,7 @@ load_dotenv(ENV_PATH)
 GROQ_API_URL = "https://api.groq.com/openai/v1/chat/completions"
 GROQ_MODEL = "openai/gpt-oss-20b"
 
-ALLOWED_TYPES = {
-    "question",
-    "objection",
-    "misconception",
-    "pain_point",
-    "negative_feedback",
-    "other",
-}
+ALLOWED_TYPES = {"question","objection","misconception","pain_point","negative_feedback","other"}
 ALLOWED_STATUSES = {"New", "Reviewed", "Answered", "Converted to Content"}
 ALLOWED_PRIORITIES = {"low", "medium", "high"}
 
@@ -37,10 +30,8 @@ GROQ_ERROR_MESSAGE = "AI analysis failed. Please check your Groq setup or try ag
 # This function resolves the UUID-based app user profile for the logged-in account.
 def resolve_application_user(db, authenticated_account):
     user_profile = (
-        db.query(User)
-        .filter(User.user_auth_id == authenticated_account.id)
-        .first()
-    )
+                    db.query(User).filter(User.user_auth_id == authenticated_account.id).first()
+                )
 
     if not user_profile:
         raise HTTPException(status_code=status.HTTP_409_CONFLICT, detail=PROFILE_MISSING_MESSAGE)
