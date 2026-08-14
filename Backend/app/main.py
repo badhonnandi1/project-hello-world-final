@@ -10,6 +10,7 @@ from app.db import Base, engine
 import app.models
 from app.models.user_model import UserAuth
 from app.routes.auth_route import router as auth_router
+from app.routes.audience_opportunity_route import router as audience_opportunity_router
 from app.routes.knowledge_vault_route import router as knowledge_vault_router
 from app.routes.profile_route import router as profile_router
 from app.routes.interview_route import router as interview_router
@@ -35,6 +36,7 @@ app.add_middleware(
 )
 
 app.include_router(auth_router)
+app.include_router(audience_opportunity_router)
 app.include_router(knowledge_vault_router)
 app.include_router(profile_router)
 app.include_router(writing_sample_router)
