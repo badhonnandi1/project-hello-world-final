@@ -32,6 +32,7 @@ import AudienceOpportunities from "./AudienceOpportunities";
 import { getMyProfile, saveMyProfile } from "./badhon";
 import VoiceProfile from "./VoiceProfile";
 import VoiceInterview from "./VoiceInterview";
+import WritingStylePresets from "./WritingStylePresets";
 import ContentPlanCalendar from "./ContentPlanCalendar";
 
 
@@ -694,6 +695,14 @@ function Dashboard({ user, onLogout }) {
         <VoiceInterview
           token={token}
           onUnauthorized={handleSignOut}
+        />
+      );
+    }
+    if (activePage === "writing-style-presets") {
+      return (
+        <WritingStylePresets
+           token={token}
+           onUnauthorized={handleSignOut}
         />
       );
     }
