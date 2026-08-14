@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { analyzeWritingSample } from "./badhon";
+import { analyzeWritingSample } from "./shafin";
 
 const MIN_WORDS = 150;
 const MAX_WORDS = 1000;

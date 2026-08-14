@@ -15,6 +15,7 @@ from app.routes.knowledge_vault_route import router as knowledge_vault_router
 from app.routes.profile_route import router as profile_router
 from app.routes.interview_route import router as interview_router
 from app.routes.voice_interview_route import router as voice_interview_router
+from app.routes.content_plan_route import router as content_plan_router
 
 
 ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
@@ -42,6 +43,7 @@ app.include_router(profile_router)
 app.include_router(writing_sample_router)
 app.include_router(interview_router)
 app.include_router(voice_interview_router)
+app.include_router(content_plan_router)
 
 # This API endpoint confirms that the authentication API is running.
 @app.get("/")

@@ -243,16 +243,12 @@ export async function deleteAudienceOpportunity(token, opportunityId) {
 // This function starts a new interview session.
 export async function startInterviewSession(token) {
   return request("/interview/start", {
-// This function sends a pasted writing sample to the analyzer and returns the results.
-export async function analyzeWritingSample(token, sampleData) {
-  return request("/writing-samples/analyze", {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
 }
-
 
 // This function gets the current active interview session.
 export async function getCurrentInterviewSession(token) {
@@ -264,7 +260,6 @@ export async function getCurrentInterviewSession(token) {
   });
 }
 
-
 // This function submits an answer for a specific question in the interview.
 export async function submitInterviewAnswer(token, answerId, answerText) {
   return request(`/interview/answer/${answerId}`, {
@@ -273,8 +268,5 @@ export async function submitInterviewAnswer(token, answerId, answerText) {
       Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ answer_text: answerText }),
-  });
-}
-    body: JSON.stringify(sampleData),
   });
 }

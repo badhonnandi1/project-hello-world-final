@@ -26,12 +26,13 @@ import {
   X,
 } from "lucide-react";
 
-import KnowledgeVault from "./KnowledgeVault";
+
 import AudienceOpportunities from "./AudienceOpportunities";
-import GuidedInterview from "./GuidedInterview";
+
 import { getMyProfile, saveMyProfile } from "./badhon";
 import VoiceProfile from "./VoiceProfile";
 import VoiceInterview from "./VoiceInterview";
+import ContentPlanCalendar from "./ContentPlanCalendar";
 
 
 // Future API endpoints can be connected to each feature from this list.
@@ -39,7 +40,7 @@ const features = [
   { id: "guided-interview", name: "Guided Interview" },
   { id: "knowledge-vault", name: "Knowledge Vault" },
   { id: "campaign-management", name: "Campaign Management" },
-  { id: "subscription-management", name: "Subscription Management" },git
+  { id: "subscription-management", name: "Subscription Management" },
   { id: "voice-interview", name: "Voice Interview" },
   { id: "rag-retrieval", name: "RAG Retrieval" },
   { id: "content-plan-generator", name: "Content Plan Generator" },
@@ -52,6 +53,7 @@ const features = [
   { id: "rewrite-laboratory", name: "Rewrite Laboratory" },
   { id: "quality-checker", name: "Quality Checker" },
   { id: "review-and-approval", name: "Review and Approval" },
+];
 const workspaceNavigation = [
   {
     id: "home",
@@ -650,20 +652,33 @@ function Dashboard({ user, onLogout }) {
         />
       );
     }
-
     if (activePage === "guided-interview") {
       return (
         <GuidedInterview
-
-    if (activePage === "writing-sample-analyzer") {
-      return (
-        <WritingAnalyzer
-
           token={token}
           onUnauthorized={handleSignOut}
         />
       );
     }
+
+    if (activePage === "writing-sample-analyzer") {
+      return (
+        <WritingAnalyzer
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+    if (activePage === "publishing-calendar") {
+      return (
+        <ContentPlanCalendar
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
+
 
     if (activePage === "personal-voice-profile") {
       return (
@@ -680,8 +695,6 @@ function Dashboard({ user, onLogout }) {
           token={token}
           onUnauthorized={handleSignOut}
         />
-       );
-    }  
       );
     }
 
