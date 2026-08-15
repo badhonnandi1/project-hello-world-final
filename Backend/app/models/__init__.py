@@ -10,3 +10,4 @@ from app.models.voice_profile_model import VoiceProfile
 from app.models.writing_analysis_model import WritingAnalysis
 from app.models.writing_sample_model import WritingSample
 from app.models.voice_interview_model import VoiceInterview
+from app.models.campaign_model import Campaign, CampaignPost

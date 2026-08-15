@@ -29,6 +29,7 @@ import GuidedInterview from "./GuidedInterview";
 import { getMyProfile, saveMyProfile } from "./badhon";
 import VoiceProfile from "./VoiceProfile";
 import VoiceInterview from "./VoiceInterview";
+import CampaignManagement from "./CampaignManagement";
 
 
 const workspaceNavigation = [
@@ -651,6 +652,15 @@ function Dashboard({ user, onLogout }) {
     if (activePage === "voice-interview") {
       return (
         <VoiceInterview
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
+    if (activePage === "campaign-management") {
+      return (
+        <CampaignManagement
           token={token}
           onUnauthorized={handleSignOut}
         />

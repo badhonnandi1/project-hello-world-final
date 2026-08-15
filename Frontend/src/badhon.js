@@ -272,3 +272,38 @@ export async function submitInterviewAnswer(token, answerId, answerText) {
     body: JSON.stringify({ answer_text: answerText }),
   });
 }
+
+
+// This function sends chat message history and form state to the campaign AI assistant.
+export async function sendCampaignChat(token, chatData) {
+  return request("/campaigns/chat", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(chatData),
+  });
+}
+
+
+// This function saves a completed campaign and posts to the database.
+export async function saveCampaign(token, campaignData) {
+  return request("/campaigns", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(campaignData),
+  });
+}
+
+
+// This function retrieves all saved campaigns for the logged-in user.
+export async function getCampaigns(token) {
+  return request("/campaigns", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
