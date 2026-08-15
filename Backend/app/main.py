@@ -15,6 +15,10 @@ from app.routes.knowledge_vault_route import router as knowledge_vault_router
 from app.routes.profile_route import router as profile_router
 from app.routes.interview_route import router as interview_router
 from app.routes.voice_interview_route import router as voice_interview_router
+from app.routes.content_plan_route import router as content_plan_router
+from app.routes.writing_style_preset_route import (
+    router as writing_style_preset_router,
+)
 from app.routes.campaign_route import router as campaign_router
 
 
@@ -43,6 +47,8 @@ app.include_router(profile_router)
 app.include_router(writing_sample_router)
 app.include_router(interview_router)
 app.include_router(voice_interview_router)
+app.include_router(content_plan_router)
+app.include_router(writing_style_preset_router)
 app.include_router(campaign_router)
 
 # This API endpoint confirms that the authentication API is running.
