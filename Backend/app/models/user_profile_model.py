@@ -89,9 +89,13 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
-
     style_presets = relationship(
-    "StylePreset",
-    back_populates="user",
-    cascade="all, delete-orphan",
+        "StylePreset",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+    campaigns = relationship(
+        "Campaign",
+        back_populates="user",
+        cascade="all, delete-orphan",
     )

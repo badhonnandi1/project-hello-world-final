@@ -14,3 +14,4 @@ from app.models.content_plan_model import ContentPlan
 from app.models.writing_style_preset_model import StylePreset
 from app.models.style_preset_archetype_model import StylePresetArchetype
 
+from app.models.campaign_model import Campaign, CampaignPost
