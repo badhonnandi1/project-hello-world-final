@@ -39,7 +39,7 @@ def get_current_interview(
     return interview_controller.get_current_interview_session(db, authenticated_account)
 
 
-@router.put("/answer/{answer_id}", response_model=InterviewAnswerResponse)
+@router.put("/answer/{answer_id}", response_model=InterviewSessionResponse)
 def update_answer(
     answer_id: UUID,
     answer_data: InterviewAnswerUpdate,

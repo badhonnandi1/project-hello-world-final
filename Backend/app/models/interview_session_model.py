@@ -1,6 +1,6 @@
 import uuid
 
-from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, String, func, text
+from sqlalchemy import CheckConstraint, Column, DateTime, ForeignKey, String, Text, func, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import relationship
 
@@ -38,13 +38,14 @@ class InterviewSession(Base):
     )
     started_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     completed_at = Column(DateTime(timezone=True), nullable=True)
-    created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
-    updated_at = Column(
-        DateTime(timezone=True),
-        nullable=False,
-        server_default=func.now(),
-        onupdate=func.now(),
-    )
+
+    # Extracted data columns
+    profession = Column(Text, nullable=True)
+    target_audience = Column(Text, nullable=True)
+    goals = Column(Text, nullable=True)
+    online_identity = Column(Text, nullable=True)
+    writing_style = Column(Text, nullable=True)
+    company_name = Column(Text, nullable=True)
 
     # These relationships connect the session to its owner and ordered answers.
     user = relationship("User", back_populates="interview_sessions")
