@@ -29,8 +29,12 @@ class InterviewSessionResponse(BaseModel):
     status: str
     started_at: datetime
     completed_at: Optional[datetime] = None
-    created_at: datetime
-    updated_at: datetime
+    profession: Optional[str] = None
+    target_audience: Optional[str] = None
+    goals: Optional[str] = None
+    online_identity: Optional[str] = None
+    writing_style: Optional[str] = None
+    company_name: Optional[str] = None
     answers: List[InterviewAnswerResponse] = []
 
     model_config = ConfigDict(from_attributes=True)
