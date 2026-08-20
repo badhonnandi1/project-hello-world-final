@@ -2,6 +2,9 @@ import { useEffect, useState } from "react";
 import KnowledgeVault from "./KnowledgeVault";
 import GuidedInterview from "./GuidedInterview"
 import WritingAnalyzer from "./WritingAnalyzer";
+import StoryAngleBuilder from "./StoryAngleBuilder";
+import NewsletterStudio from "./NewsletterStudio";
+import NewsletterSubscriptions from "./NewsletterSubscriptions";
 import {
   BadgeCheck,
   BookOpen,
@@ -11,12 +14,14 @@ import {
   FileText,
   Home,
   LogOut,
+  Mail,
   Megaphone,
   Menu,
   MessageCircle,
   Mic,
   Palette,
   PenTool,
+  Newspaper,
   RefreshCw,
   Search,
   ShieldCheck,
@@ -55,6 +60,8 @@ const features = [
   { id: "rewrite-laboratory", name: "Rewrite Laboratory" },
   { id: "quality-checker", name: "Quality Checker" },
   { id: "review-and-approval", name: "Review and Approval" },
+  { id: "newsletter-studio", name: "Newsletter Studio" },
+  { id: "newsletter-subscriptions", name: "Newsletter Subscriptions" },
 ];
 const workspaceNavigation = [
   {
@@ -110,6 +117,18 @@ const workspaceNavigation = [
     name: "Content Plan Generator",
     icon: CalendarDays,
     description: "Shape saved knowledge into a content plan.",
+  },
+  {
+    id: "newsletter-studio",
+    name: "Newsletter Studio",
+    icon: Newspaper,
+    description: "Create, generate, and publish newsletters for your readers.",
+  },
+  {
+    id: "newsletter-subscriptions",
+    name: "Newsletter Subscriptions",
+    icon: Mail,
+    description: "Discover creators and manage newsletter delivery preferences.",
   },
 ];
 
@@ -410,7 +429,7 @@ function Dashboard({ user, onLogout }) {
       workspaceNavigation[1],
       workspaceNavigation[2],
       workspaceNavigation[3],
-      workspaceNavigation[6],
+      workspaceNavigation[7],
     ];
 
     return (
@@ -654,6 +673,16 @@ function Dashboard({ user, onLogout }) {
         />
       );
     }
+
+    if (activePage === "rag-retrieval") {
+      return (
+        <StoryAngleBuilder
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
     if (activePage === "guided-interview") {
       return (
         <GuidedInterview
@@ -711,6 +740,24 @@ function Dashboard({ user, onLogout }) {
     if (activePage === "campaign-management") {
       return (
         <CampaignManagement
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
+    if (activePage === "newsletter-studio") {
+      return (
+        <NewsletterStudio
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
+    if (activePage === "newsletter-subscriptions") {
+      return (
+        <NewsletterSubscriptions
           token={token}
           onUnauthorized={handleSignOut}
         />

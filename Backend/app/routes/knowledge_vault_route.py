@@ -17,7 +17,10 @@ from app.schemas.knowledge_vault_schema import (
     KnowledgeVaultCreate,
     KnowledgeVaultResponse,
     KnowledgeVaultUpdate,
+    StoryAngleRequest,
+    StoryAngleResponse,
 )
+from app.services.story_angle_service import build_story_angle
 
 
 router = APIRouter(prefix="/knowledge-vault", tags=["Knowledge Vault"])
@@ -83,3 +86,13 @@ def delete_item(
     db: Session = Depends(get_db),
 ):
     return delete_knowledge_item(db, authenticated_account, item_id)
+
+
+# This API endpoint retrieves vault sources and turns them into a content angle.
+@router.post("/story-angle", response_model=StoryAngleResponse)
+def create_story_angle(
+    request: StoryAngleRequest,
+    authenticated_account=Depends(get_authenticated_account),
+    db: Session = Depends(get_db),
+):
+    return build_story_angle(db, authenticated_account, request)
