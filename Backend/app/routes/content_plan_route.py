@@ -35,13 +35,13 @@ def create_content_plan_endpoint(
     return create_content_plan(db, user, request)
 
 
-# ── LIST (⭐ THIS IS THE CALENDAR API) ────────────────────
+
 @router.get("", response_model=list[ContentPlanResponse])
 def list_content_plans_endpoint(
     credentials: HTTPAuthorizationCredentials = Depends(bearer_scheme),
     db: Session = Depends(get_db),
-    week_start: Optional[date] = None,   # query param: ?week_start=2026-08-10
-    week_end: Optional[date] = None,     # query param: ?week_end=2026-08-16
+    week_start: Optional[date] = None,   
+    week_end: Optional[date] = None,     
 ):
     user = get_logged_in_user(db, credentials.credentials)
     # Map the public API names (week_start) → controller names (start_date)
