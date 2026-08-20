@@ -182,3 +182,75 @@ export async function updateVoiceInterview(
     body: JSON.stringify(interviewData),
   });
 }
+
+// ---------------------------------------------------------
+// WRITING STYLE PRESETS
+// ---------------------------------------------------------
+
+// Get all saved Writing Style Presets belonging to the logged-in user.
+export async function getWritingStylePresets(token) {
+  return request("/writing-style-presets", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Generate a temporary rule-based style preview.
+// Nothing is saved to the database.
+export async function previewWritingStylePreset(token, previewData) {
+  return request("/writing-style-presets/preview", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(previewData),
+  });
+}
+
+// Save a new Writing Style Preset.
+export async function createWritingStylePreset(token, presetData) {
+  return request("/writing-style-presets", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(presetData),
+  });
+}
+
+// Get one saved Writing Style Preset.
+export async function getWritingStylePreset(token, presetId) {
+  return request(`/writing-style-presets/${presetId}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Update an existing Writing Style Preset.
+export async function updateWritingStylePreset(
+  token,
+  presetId,
+  presetData
+) {
+  return request(`/writing-style-presets/${presetId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(presetData),
+  });
+}
+
+// Delete an existing Writing Style Preset.
+export async function deleteWritingStylePreset(token, presetId) {
+  return request(`/writing-style-presets/${presetId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}

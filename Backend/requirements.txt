@@ -5,6 +5,7 @@ psycopg[binary]
 python-dotenv
 pydantic
 requests
+certifi
 pwdlib[argon2]
 PyJWT
 google-genai

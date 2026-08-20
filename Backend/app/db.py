@@ -54,8 +54,7 @@ def build_database_url():
         missing_names.append("DB_PASSWORD or password")
 
     if missing_names:
-        # Fallback to local PostgreSQL URL if env vars are missing
-        return "postgresql+psycopg://postgres:postgres@localhost:5432/ghostwriter_db"
+        raise RuntimeError("Missing database environment variables: " + ", ".join(missing_names))
 
     return URL.create(
         "postgresql+psycopg",
@@ -67,17 +66,10 @@ def build_database_url():
     )
 
 
-# Determine SSL settings based on database URL host
-db_url = build_database_url()
-db_url_str = str(db_url)
-connect_args = {}
-if "localhost" not in db_url_str and "127.0.0.1" not in db_url_str:
-    connect_args["sslmode"] = "require"
-
-# This database block creates the shared SQLAlchemy engine for PostgreSQL.
+# This database block creates the shared SQLAlchemy engine for Supabase PostgreSQL.
 engine = create_engine(
-    db_url,
-    connect_args=connect_args,
+    build_database_url(),
+    connect_args={"sslmode": "require"},
     pool_pre_ping=True,
 )
 
@@ -95,4 +87,3 @@ def get_db():
         yield db
     finally:
         db.close()
-
