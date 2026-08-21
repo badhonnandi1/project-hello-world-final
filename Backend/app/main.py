@@ -24,7 +24,8 @@ from app.routes.newsletter_route import router as newsletter_router
 from app.routes.newsletter_subscription_route import (
     router as newsletter_subscription_router,
 )
-
+from app.routes import viral_topic_route
+from app.routes import subscription_route
 
 ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(ENV_PATH)
@@ -56,7 +57,9 @@ app.include_router(writing_style_preset_router)
 app.include_router(campaign_router)
 app.include_router(newsletter_router)
 app.include_router(newsletter_subscription_router)
-
+# Add this line alongside the other router includes:
+app.include_router(viral_topic_route.router)
+app.include_router(subscription_route.router)
 # This API endpoint confirms that the authentication API is running.
 @app.get("/")
 def read_root():

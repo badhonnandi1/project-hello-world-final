@@ -17,3 +17,4 @@ from app.models.style_preset_archetype_model import StylePresetArchetype
 from app.models.campaign_model import Campaign, CampaignPost
 from app.models.newsletter_model import Newsletter, NewsletterCreator
 from app.models.newsletter_subscription_model import NewsletterSubscription
+from app.models.viral_topic_model import ViralTopic

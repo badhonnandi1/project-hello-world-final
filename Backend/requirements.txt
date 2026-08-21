@@ -10,3 +10,5 @@ pwdlib[argon2]
 PyJWT
 google-genai
 python-multipart
+google-generativeai
+stripe
