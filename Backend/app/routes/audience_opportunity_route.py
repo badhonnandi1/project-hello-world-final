@@ -8,13 +8,19 @@ from app.controllers.auth_controller import get_logged_in_user
 from app.controllers.audience_opportunity_controller import (
     create_opportunity,
     delete_opportunity,
+    get_explore_feed,
     get_opportunity,
     list_opportunities,
     reanalyze_opportunity,
     update_opportunity,
 )
 from app.db import get_db
-from app.schemas.audience_opportunity_schema import (AudienceOpportunityCreate,AudienceOpportunityResponse,AudienceOpportunityUpdate,)
+from app.schemas.audience_opportunity_schema import (
+    AudienceOpportunityCreate,
+    AudienceOpportunityResponse,
+    AudienceOpportunityUpdate,
+    ExploreOpportunityResponse,
+)
 
 
 router = APIRouter(prefix="/api/opportunities", tags=["Audience Opportunities"])
@@ -26,8 +32,20 @@ def get_authenticated_account(credentials: HTTPAuthorizationCredentials = Depend
     return get_logged_in_user(db, credentials.credentials)
 
 
+# This API endpoint returns an anonymous feed of community opportunities semantically matched to target audience.
+@router.get("/explore", response_model=list[ExploreOpportunityResponse])
+def explore_items(
+    offset: int = Query(default=0, ge=0),
+    limit: int = Query(default=10, ge=1, le=100),
+    authenticated_account=Depends(get_authenticated_account),
+    db: Session = Depends(get_db),
+):
+    return get_explore_feed(db, authenticated_account, offset=offset, limit=limit)
+
+
 # This API endpoint creates and analyzes an audience opportunity.
 @router.post("/analyze", response_model=AudienceOpportunityResponse, status_code=status.HTTP_201_CREATED)
+
 def create_item(
     opportunity_data: AudienceOpportunityCreate,authenticated_account=Depends(get_authenticated_account),db: Session = Depends(get_db),):
     return create_opportunity(db, authenticated_account, opportunity_data)

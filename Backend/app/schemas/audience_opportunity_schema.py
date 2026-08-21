@@ -118,3 +118,16 @@ class AudienceOpportunityResponse(BaseModel):
     updated_at: datetime
 
     model_config = ConfigDict(from_attributes=True)
+
+
+# This class describes anonymous explore feed opportunities (no user_id or author info).
+class ExploreOpportunityResponse(BaseModel):
+    id: UUID
+    source_text: str
+    source_platform: str | None = None
+    audience_concern: str
+    suggested_topic: str
+    created_at: datetime
+
+    model_config = ConfigDict(from_attributes=True)
+
