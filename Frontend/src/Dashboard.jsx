@@ -10,6 +10,7 @@ import {
   BookOpen,
   CalendarDays,
   ClipboardList,
+  Compass,
   CreditCard,
   FileText,
   Home,
@@ -33,6 +34,7 @@ import {
 
 
 import AudienceOpportunities from "./AudienceOpportunities";
+import ExploreOpportunities from "./ExploreOpportunities";
 
 import { getMyProfile, saveMyProfile } from "./badhon";
 import VoiceProfile from "./VoiceProfile";
@@ -88,6 +90,14 @@ const workspaceNavigation = [
     icon: ClipboardList,
     description: "Turn audience questions and objections into content ideas.",
   },
+  {
+    id: "explore-opportunities",
+    name: "Explore Opportunities",
+    icon: Compass,
+    description: "Explore community opportunities matching your audience.",
+    status: "implemented",
+  },
+
   {
     id: "campaign-management",
     name: "Campaign Management",
@@ -673,6 +683,17 @@ function Dashboard({ user, onLogout }) {
         />
       );
     }
+
+    if (activePage === "explore-opportunities") {
+      return (
+        <ExploreOpportunities
+          token={token}
+          onUnauthorized={handleSignOut}
+          onNavigate={openPage}
+        />
+      );
+    }
+
 
     if (activePage === "rag-retrieval") {
       return (

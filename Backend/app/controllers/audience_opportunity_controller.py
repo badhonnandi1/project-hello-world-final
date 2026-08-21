@@ -8,8 +8,11 @@ from fastapi import HTTPException, status
 from pydantic import ValidationError
 
 from app.models.audience_opportunity_model import AudienceOpportunity
+from app.models.interview_session_model import InterviewSession
 from app.models.user_profile_model import User
 from app.schemas.audience_opportunity_schema import AudienceOpportunityAIAnalysis
+from app.services.explore_ai_service import filter_similar_opportunities
+
 
 
 ENV_PATH = Path(__file__).resolve().parent.parent.parent / ".env"
@@ -227,3 +230,69 @@ def reanalyze_opportunity(db, authenticated_account, opportunity_id):
     db.refresh(opportunity)
 
     return opportunity
+
+
+# This function fetches an anonymous feed of community opportunities semantically matched to the user's target audience.
+def get_explore_feed(db, authenticated_account, offset: int = 0, limit: int = 10):
+    # Step 1: Resolve current user profile
+    current_user = resolve_application_user(db, authenticated_account)
+
+    # Step 2: Fetch user's most recently completed InterviewSession to extract target_audience
+    completed_interview = (
+        db.query(InterviewSession)
+        .filter(
+            InterviewSession.user_id == current_user.id,
+            InterviewSession.status == "completed",
+        )
+        .order_by(InterviewSession.completed_at.desc().nullslast(), InterviewSession.started_at.desc())
+        .first()
+    )
+
+    if (
+        not completed_interview
+        or not completed_interview.target_audience
+        or not completed_interview.target_audience.strip()
+    ):
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Please complete your guided interview to set your target audience before exploring opportunities.",
+        )
+
+    user_audience = completed_interview.target_audience.strip()
+
+    # Step 3: Fetch recent batch of AudienceOpportunity records created by other users
+    candidate_opps = (
+        db.query(AudienceOpportunity)
+        .filter(AudienceOpportunity.user_id != current_user.id)
+        .order_by(AudienceOpportunity.created_at.desc())
+        .limit(100)
+        .all()
+    )
+
+    if not candidate_opps:
+        return []
+
+    # Step 4: Pass user's target_audience and batch to Gemini for semantic matching & ranking
+    batch_dicts = [
+        {
+            "id": opp.id,
+            "audience_concern": opp.audience_concern,
+            "source_text": opp.source_text,
+            "suggested_topic": opp.suggested_topic,
+            "source_platform": opp.source_platform,
+        }
+        for opp in candidate_opps
+    ]
+
+    matched_id_strs = filter_similar_opportunities(
+        user_audience=user_audience,
+        opportunities_batch=batch_dicts,
+    )
+
+    # Step 5: Map matched IDs back to DB records, preserving order, and paginate
+    opp_by_id = {str(opp.id): opp for opp in candidate_opps}
+    ordered_matched_opps = [opp_by_id[m_id] for m_id in matched_id_strs if m_id in opp_by_id]
+
+    paginated_opps = ordered_matched_opps[offset : offset + limit]
+    return paginated_opps
+

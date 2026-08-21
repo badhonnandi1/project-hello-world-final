@@ -348,8 +348,20 @@ export async function deleteNewsletterSubscription(token, subscriptionId) {
 }
 
 
+// This function loads community audience opportunities matched to the user's target audience.
+export async function getExploreOpportunities(token, offset = 0, limit = 10) {
+  return request(`/api/opportunities/explore?offset=${offset}&limit=${limit}`, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
 // This function loads audience opportunities with optional filters.
 export async function getAudienceOpportunities(token, filters = {}) {
+
   const params = new URLSearchParams();
 
   if (filters.status) {
