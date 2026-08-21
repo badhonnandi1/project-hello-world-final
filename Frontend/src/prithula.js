@@ -19,11 +19,47 @@ async function request(path, options = {}) {
     data = null;
   }
 
+  //if (!response.ok) {
+    //const message = data?.detail || "Something went wrong";
+    //const error = new Error(message);
+    //error.status = response.status;
+    //throw error;
+  //}
   if (!response.ok) {
-    const message = data?.detail || "Something went wrong";
+
+    let message = "Something went wrong";
+
+
+    if (typeof data?.detail === "string") {
+
+        message = data.detail;
+
+    }
+
+
+    else if (typeof data?.detail === "object") {
+
+        message =
+            data.detail.message ||
+            "Request failed";
+
+    }
+
+
+
     const error = new Error(message);
+
+
     error.status = response.status;
+
+
+    // IMPORTANT
+    // Keep backend violation data
+    error.details = data?.detail;
+
+
     throw error;
+
   }
 
   return data;
@@ -253,4 +289,242 @@ export async function deleteWritingStylePreset(token, presetId) {
       Authorization: `Bearer ${token}`,
     },
   });
+}
+
+// ---------------------------------------------------------
+// PRIVACY GUARDRAILS
+// ---------------------------------------------------------
+
+// Get all Privacy Guardrail rules belonging to the logged-in user.
+export async function getPrivacyGuardrails(token) {
+  return request("/privacy-guardrails", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// Create a new Privacy Guardrail rule.
+export async function createPrivacyGuardrail(token, guardrailData) {
+  return request("/privacy-guardrails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(guardrailData),
+  });
+}
+
+
+// Update an existing Privacy Guardrail rule.
+export async function updatePrivacyGuardrail(
+  token,
+  ruleId,
+  guardrailData
+) {
+  return request(`/privacy-guardrails/${ruleId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(guardrailData),
+  });
+}
+
+
+// Enable or disable a Privacy Guardrail rule.
+export async function togglePrivacyGuardrail(token, ruleId) {
+  return request(`/privacy-guardrails/${ruleId}/toggle`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// Delete a Privacy Guardrail rule permanently.
+export async function deletePrivacyGuardrail(token, ruleId) {
+  return request(`/privacy-guardrails/${ruleId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// Check text against all active Privacy Guardrails.
+export async function checkPrivacyGuardrails(token, text) {
+  return request("/privacy-guardrails/check", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      text,
+    }),
+  });
+}
+
+// ---------------------------------------------------------
+// POST GENERATION
+// ---------------------------------------------------------
+
+
+// Load available content plans
+export async function getPostGenerationContentPlans(token) {
+  return request("/post-generation/content-plans", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// Load available voice interviews
+export async function getPostGenerationVoiceInterviews(token) {
+  return request("/post-generation/voice-interviews", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// Load knowledge vault items
+export async function getPostGenerationKnowledgeItems(token) {
+  return request("/post-generation/knowledge-items", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// Load writing style presets
+export async function getPostGenerationStylePresets(token) {
+  return request("/post-generation/style-presets", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+
+// Generate post
+export async function generatePost(token, generationData) {
+
+  return request("/post-generation/generate", {
+
+    method: "POST",
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+
+    body: JSON.stringify(generationData),
+
+  });
+
+}
+
+
+
+// Regenerate post
+export async function regeneratePost(
+  token,
+  regenerationData
+) {
+
+  return request("/post-generation/regenerate", {
+
+    method: "POST",
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+
+    body: JSON.stringify(regenerationData),
+
+  });
+
+}
+
+
+
+// Save generated post
+export async function saveGeneratedPost(
+  token,
+  saveData
+) {
+
+  return request("/post-generation/save", {
+
+    method: "POST",
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+
+    body: JSON.stringify(saveData),
+
+  });
+
+}
+
+
+
+// Load saved generated posts
+export async function getSavedGeneratedPosts(token) {
+
+  return request("/post-generation/my-posts", {
+
+    method: "GET",
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+
+  });
+
+}
+
+// ---------------------------------------------------------
+// CHECK PRIVACY FOR EDITED / GENERATED TEXT
+// ---------------------------------------------------------
+
+
+
+
+
+
+// ---------------------------------------------------------
+// DELETE SAVED GENERATED POST
+// ---------------------------------------------------------
+
+export async function deleteSavedGeneratedPost(
+token,
+postId
+){
+
+return request(
+`/post-generation/${postId}`,
+{
+
+method:"DELETE",
+
+headers:{
+Authorization:`Bearer ${token}`,
+},
+
+});
+
 }

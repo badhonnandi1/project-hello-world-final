@@ -20,6 +20,12 @@ from app.routes.writing_style_preset_route import (
     router as writing_style_preset_router,
 )
 from app.routes.campaign_route import router as campaign_router
+from app.routes.privacy_guardrail_route import (
+    router as privacy_guardrail_router,
+)
+from app.routes.post_generation_route import (
+    router as post_generation_router,
+)
 
 
 ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
@@ -50,6 +56,8 @@ app.include_router(voice_interview_router)
 app.include_router(content_plan_router)
 app.include_router(writing_style_preset_router)
 app.include_router(campaign_router)
+app.include_router(privacy_guardrail_router)
+app.include_router(post_generation_router)
 
 # This API endpoint confirms that the authentication API is running.
 @app.get("/")

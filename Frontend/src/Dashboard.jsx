@@ -35,6 +35,8 @@ import VoiceInterview from "./VoiceInterview";
 import CampaignManagement from "./CampaignManagement";
 import WritingStylePresets from "./WritingStylePresets";
 import ContentPlanCalendar from "./ContentPlanCalendar";
+import PrivacyGuardrails from "./PrivacyGuardrails";
+import PostGeneration from "./PostGeneration";
 
 
 // Future API endpoints can be connected to each feature from this list.
@@ -707,7 +709,24 @@ function Dashboard({ user, onLogout }) {
         />
       );
     }
+    if (activePage === "privacy-guardrails") {
+      return (
+        <PrivacyGuardrails
+           token={token}
+           onUnauthorized={handleSignOut}
+        />
+      );
+    }
+    if (activePage === "post-generation") {
 
+      return (
+        <PostGeneration
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+
+    }
     if (activePage === "campaign-management") {
       return (
         <CampaignManagement

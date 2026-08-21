@@ -15,3 +15,5 @@ from app.models.writing_style_preset_model import StylePreset
 from app.models.style_preset_archetype_model import StylePresetArchetype
 
 from app.models.campaign_model import Campaign, CampaignPost
+from app.models.privacy_guardrail_model import PrivacyGuardrail
+from app.models.post_generation_model import PostGeneration
