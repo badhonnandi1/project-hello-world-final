@@ -55,6 +55,18 @@ function App() {
 
   // This effect checks localStorage when the app first loads.
   useEffect(() => {
+    // ⬇️ CATCH STRIPE REDIRECT ⬇️
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("stripe_success") === "true") {
+      const sessionId = urlParams.get("session_id");
+      if (sessionId) {
+        localStorage.setItem("pending_stripe_verification", sessionId);
+      }
+      // Clean up the URL so it doesn't trigger again on refresh
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+    // ⬆️ END OF STRIPE REDIRECT BLOCK ⬆️
+
     const savedToken = localStorage.getItem("access_token");
 
     if (savedToken) {
