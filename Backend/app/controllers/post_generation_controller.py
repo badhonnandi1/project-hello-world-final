@@ -36,8 +36,6 @@ from app.schemas.post_generation_schema import (
     SavePostGenerationRequest,
 )
 
-
-
 # =========================================================
 # GEMINI CONFIGURATION
 # =========================================================
@@ -47,15 +45,10 @@ load_dotenv()
 api_key = os.getenv("GEMINI_API_KEY")
 
 if not api_key:
-    raise RuntimeError(
-        "GEMINI_API_KEY not found in .env"
-    )
+    raise RuntimeError("GEMINI_API_KEY not found in .env")
 
 
-client = genai.Client(
-    api_key=api_key
-)
-
+client = genai.Client(api_key=api_key)
 
 
 # =========================================================
@@ -73,13 +66,8 @@ def resolve_application_user(
     """
 
     user_profile = (
-        db.query(User)
-        .filter(
-            User.user_auth_id == authenticated_account.id
-        )
-        .first()
+        db.query(User).filter(User.user_auth_id == authenticated_account.id).first()
     )
-
 
     if not user_profile:
 
@@ -88,10 +76,7 @@ def resolve_application_user(
             detail="Application user profile not found.",
         )
 
-
     return user_profile
-
-
 
 
 # =========================================================
@@ -116,7 +101,6 @@ def resolve_application_user(
 # =========================================================
 
 
-
 def get_available_content_plans(
     db,
     authenticated_account,
@@ -126,29 +110,19 @@ def get_available_content_plans(
     for frontend selection.
     """
 
-
     current_user = resolve_application_user(
         db,
         authenticated_account,
     )
 
-
     plans = (
         db.query(ContentPlan)
-        .filter(
-            ContentPlan.user_id == current_user.id
-        )
-        .order_by(
-            ContentPlan.created_at.desc()
-        )
+        .filter(ContentPlan.user_id == current_user.id)
+        .order_by(ContentPlan.created_at.desc())
         .all()
     )
 
-
     return plans
-
-
-
 
 
 def get_available_voice_interviews(
@@ -160,29 +134,19 @@ def get_available_voice_interviews(
     for frontend selection.
     """
 
-
     current_user = resolve_application_user(
         db,
         authenticated_account,
     )
 
-
     interviews = (
         db.query(VoiceInterview)
-        .filter(
-            VoiceInterview.user_id == current_user.id
-        )
-        .order_by(
-            VoiceInterview.created_at.desc()
-        )
+        .filter(VoiceInterview.user_id == current_user.id)
+        .order_by(VoiceInterview.created_at.desc())
         .all()
     )
 
-
     return interviews
-
-
-
 
 
 def get_available_knowledge_items(
@@ -197,29 +161,19 @@ def get_available_knowledge_items(
     Backend receives item_id.
     """
 
-
     current_user = resolve_application_user(
         db,
         authenticated_account,
     )
 
-
     items = (
         db.query(KnowledgeVaultItem)
-        .filter(
-            KnowledgeVaultItem.user_id == current_user.id
-        )
-        .order_by(
-            KnowledgeVaultItem.created_at.desc()
-        )
+        .filter(KnowledgeVaultItem.user_id == current_user.id)
+        .order_by(KnowledgeVaultItem.created_at.desc())
         .all()
     )
 
-
     return items
-
-
-
 
 
 def get_available_style_presets(
@@ -231,36 +185,24 @@ def get_available_style_presets(
     for frontend selection.
     """
 
-
     current_user = resolve_application_user(
         db,
         authenticated_account,
     )
 
-
     presets = (
         db.query(StylePreset)
-        .filter(
-            StylePreset.user_id == current_user.id
-        )
-        .order_by(
-            StylePreset.created_at.desc()
-        )
+        .filter(StylePreset.user_id == current_user.id)
+        .order_by(StylePreset.created_at.desc())
         .all()
     )
 
-
     return presets
-
-
-
-
 
 
 # =========================================================
 # SOURCE LOADING FOR GEMINI
 # =========================================================
-
 
 
 def get_content_plan_source(
@@ -272,7 +214,6 @@ def get_content_plan_source(
     Loads selected Content Plan.
     """
 
-
     content_plan = (
         db.query(ContentPlan)
         .filter(
@@ -282,7 +223,6 @@ def get_content_plan_source(
         .first()
     )
 
-
     if not content_plan:
 
         raise HTTPException(
@@ -290,19 +230,11 @@ def get_content_plan_source(
             detail="Content plan not found.",
         )
 
-
     return {
-
         "title": content_plan.title,
-
         "content": content_plan.content_text,
-
         "platform": content_plan.platform,
-
     }
-
-
-
 
 
 def get_voice_interview_source(
@@ -314,7 +246,6 @@ def get_voice_interview_source(
     Loads selected Voice Interview.
     """
 
-
     interview = (
         db.query(VoiceInterview)
         .filter(
@@ -324,7 +255,6 @@ def get_voice_interview_source(
         .first()
     )
 
-
     if not interview:
 
         raise HTTPException(
@@ -332,19 +262,11 @@ def get_voice_interview_source(
             detail="Voice interview not found.",
         )
 
-
     return {
-
         "title": "Voice Interview",
-
         "content": interview.transcript,
-
         "platform": "LinkedIn",
-
     }
-
-
-
 
 
 def resolve_generation_source(
@@ -357,7 +279,6 @@ def resolve_generation_source(
     Resolves selected generation source.
     """
 
-
     if source_type == "content_plan":
 
         return get_content_plan_source(
@@ -365,7 +286,6 @@ def resolve_generation_source(
             current_user,
             source_id,
         )
-
 
     elif source_type == "voice_interview":
 
@@ -375,7 +295,6 @@ def resolve_generation_source(
             source_id,
         )
 
-
     else:
 
         raise HTTPException(
@@ -384,13 +303,9 @@ def resolve_generation_source(
         )
 
 
-
-
-
 # =========================================================
 # USER IDENTITY CONTEXT
 # =========================================================
-
 
 
 def get_interview_context(
@@ -402,25 +317,19 @@ def get_interview_context(
     from completed guided interview.
     """
 
-
     session = (
         db.query(InterviewSession)
         .filter(
             InterviewSession.user_id == current_user.id,
             InterviewSession.status == "completed",
         )
-        .order_by(
-            InterviewSession.completed_at.desc()
-        )
+        .order_by(InterviewSession.completed_at.desc())
         .first()
     )
-
 
     if not session:
 
         return "No interview profile available."
-
-
 
     return f"""
 
@@ -447,11 +356,9 @@ Company Name:
 """
 
 
-
 # =========================================================
 # WRITING ANALYSIS CONTEXT
 # =========================================================
-
 
 
 def get_writing_analysis_context(
@@ -468,39 +375,26 @@ def get_writing_analysis_context(
     WritingAnalysis
     """
 
-
     sample = (
         db.query(WritingSample)
-        .filter(
-            WritingSample.user_id == current_user.id
-        )
-        .order_by(
-            WritingSample.uploaded_at.desc()
-        )
+        .filter(WritingSample.user_id == current_user.id)
+        .order_by(WritingSample.uploaded_at.desc())
         .first()
     )
-
 
     if not sample:
 
         return "No writing analysis available."
 
-
-
     analysis = (
         db.query(WritingAnalysis)
-        .filter(
-            WritingAnalysis.sample_id == sample.sample_id
-        )
+        .filter(WritingAnalysis.sample_id == sample.sample_id)
         .first()
     )
-
 
     if not analysis:
 
         return "No writing analysis available."
-
-
 
     return f"""
 
@@ -537,6 +431,8 @@ CTA Pattern:
 
 
 """
+
+
 # =========================================================
 # WRITING STYLE PRESET CONTEXT
 # =========================================================
@@ -552,12 +448,9 @@ def get_style_context(
     and its archetypes.
     """
 
-
     if not preset_id:
 
         return "No custom writing style selected."
-
-
 
     preset = (
         db.query(StylePreset)
@@ -568,7 +461,6 @@ def get_style_context(
         .first()
     )
 
-
     if not preset:
 
         raise HTTPException(
@@ -576,18 +468,11 @@ def get_style_context(
             detail="Writing style preset not found.",
         )
 
-
-
     archetypes = (
         db.query(StylePresetArchetype)
-        .filter(
-            StylePresetArchetype.preset_id ==
-            preset.preset_id
-        )
+        .filter(StylePresetArchetype.preset_id == preset.preset_id)
         .all()
     )
-
-
 
     style_text = f"""
 
@@ -597,19 +482,11 @@ Preset Name:
 
 """
 
-
-
     for archetype in archetypes:
 
-        style_text += (
-            f"{archetype.archetype}: "
-            f"{archetype.percentage}%\n"
-        )
-
+        style_text += f"{archetype.archetype}: " f"{archetype.percentage}%\n"
 
     return style_text
-
-
 
 
 # =========================================================
@@ -629,12 +506,9 @@ def get_knowledge_context(
     Gemini receives actual content.
     """
 
-
     if not item_ids:
 
         return "No additional knowledge provided."
-
-
 
     items = (
         db.query(KnowledgeVaultItem)
@@ -645,17 +519,11 @@ def get_knowledge_context(
         .all()
     )
 
-
-
     if not items:
 
         return "No matching knowledge items found."
 
-
-
     knowledge_text = ""
-
-
 
     for item in items:
 
@@ -675,11 +543,7 @@ Category:
 
 """
 
-
-
     return knowledge_text
-
-
 
 
 # =========================================================
@@ -697,7 +561,6 @@ def get_privacy_prompt_context(
     Privacy rules are injected into Gemini prompt.
     """
 
-
     rules = (
         db.query(PrivacyGuardrail)
         .filter(
@@ -707,17 +570,11 @@ def get_privacy_prompt_context(
         .all()
     )
 
-
-
     if not rules:
 
         return "No privacy restrictions."
 
-
-
     privacy_text = ""
-
-
 
     for rule in rules:
 
@@ -733,11 +590,7 @@ Reason:
 
 """
 
-
-
     return privacy_text
-
-
 
 
 # =========================================================
@@ -861,7 +714,6 @@ IMPORTANT GENERATION RULES
 
 """
 
-
     # =====================================================
     # REGENERATION CONTEXT
     # =====================================================
@@ -883,7 +735,6 @@ Rewrite this post with better quality while preserving the main idea.
 
 """
 
-
     if previous_violations:
 
         prompt += """
@@ -900,13 +751,11 @@ The following items MUST NOT appear in the new version:
 
 """
 
-
         for violation in previous_violations:
 
             prompt += f"""
 - {violation}
 """
-
 
         prompt += """
 
@@ -914,7 +763,6 @@ Create a new version that avoids these violations
 while keeping the post valuable and authentic.
 
 """
-
 
     return prompt
 
@@ -930,13 +778,10 @@ def generate_post(
     request: PostGenerationRequest,
 ):
 
-
     current_user = resolve_application_user(
         db,
         authenticated_account,
     )
-
-
 
     source = resolve_generation_source(
         db,
@@ -945,21 +790,15 @@ def generate_post(
         request.source_id,
     )
 
-
-
     interview_context = get_interview_context(
         db,
         current_user,
     )
 
-
-
     writing_analysis_context = get_writing_analysis_context(
         db,
         current_user,
     )
-
-
 
     style_context = get_style_context(
         db,
@@ -967,22 +806,16 @@ def generate_post(
         request.style_preset_id,
     )
 
-
-
     knowledge_context = get_knowledge_context(
         db,
         current_user,
         request.knowledge_item_ids,
     )
 
-
-
     privacy_context = get_privacy_prompt_context(
         db,
         current_user,
     )
-
-
 
     prompt = build_generation_prompt(
         source,
@@ -994,8 +827,6 @@ def generate_post(
         request,
     )
 
-
-
     try:
 
         response = client.models.generate_content(
@@ -1003,21 +834,14 @@ def generate_post(
             contents=prompt,
         )
 
-
         generated_post = response.text.strip()
 
-
-
     except Exception as e:
-
 
         raise HTTPException(
             status_code=500,
             detail=f"Gemini generation failed: {str(e)}",
         )
-
-
-
 
     # -----------------------------------------------------
     # SECOND PRIVACY LAYER
@@ -1031,22 +855,12 @@ def generate_post(
         generated_post,
     )
 
-
-
     return {
-
         "generated_post": generated_post,
-
         "platform": source["platform"],
-
         "privacy_decision": privacy_result["decision"],
-
         "violations": privacy_result["violations"],
-
     }
-
-
-
 
 
 # =========================================================
@@ -1060,13 +874,10 @@ def regenerate_post(
     request: PostRegenerationRequest,
 ):
 
-
     current_user = resolve_application_user(
         db,
         authenticated_account,
     )
-
-
 
     source = resolve_generation_source(
         db,
@@ -1075,20 +886,15 @@ def regenerate_post(
         request.source_id,
     )
 
-
-
     interview_context = get_interview_context(
         db,
         current_user,
     )
 
-
     writing_analysis_context = get_writing_analysis_context(
         db,
         current_user,
     )
-
-
 
     style_context = get_style_context(
         db,
@@ -1096,22 +902,16 @@ def regenerate_post(
         request.style_preset_id,
     )
 
-
-
     knowledge_context = get_knowledge_context(
         db,
         current_user,
         request.knowledge_item_ids,
     )
 
-
-
     privacy_context = get_privacy_prompt_context(
         db,
         current_user,
     )
-
-
 
     prompt = build_generation_prompt(
         source,
@@ -1125,8 +925,6 @@ def regenerate_post(
         request.previous_violations,
     )
 
-
-
     try:
 
         response = client.models.generate_content(
@@ -1134,21 +932,14 @@ def regenerate_post(
             contents=prompt,
         )
 
-
         generated_post = response.text.strip()
 
-
-
     except Exception as e:
-
 
         raise HTTPException(
             status_code=500,
             detail=f"Gemini regeneration failed: {str(e)}",
         )
-
-
-
 
     privacy_result = check_privacy_guardrails(
         db,
@@ -1156,22 +947,12 @@ def regenerate_post(
         generated_post,
     )
 
-
-
     return {
-
         "generated_post": generated_post,
-
         "platform": source["platform"],
-
         "privacy_decision": privacy_result["decision"],
-
         "violations": privacy_result["violations"],
-
     }
-
-
-
 
 
 # =========================================================
@@ -1185,13 +966,10 @@ def save_post_generation(
     request: SavePostGenerationRequest,
 ):
 
-
     current_user = resolve_application_user(
         db,
         authenticated_account,
     )
-
-
 
     # -----------------------------------------------------
     # FINAL PRIVACY CHECK
@@ -1206,10 +984,7 @@ def save_post_generation(
         request.content,
     )
 
-
-
     if privacy_result["decision"] == "block":
-
 
         raise HTTPException(
             status_code=400,
@@ -1219,26 +994,14 @@ def save_post_generation(
             },
         )
 
-
-
-
     new_post = PostGeneration(
-
         user_id=current_user.id,
-
         source_type=request.source_type,
-
         source_id=request.source_id,
-
         content=request.content.strip(),
-
         platform=request.platform,
-
         privacy_status=privacy_result["decision"],
-
     )
-
-
 
     db.add(new_post)
 
@@ -1246,13 +1009,13 @@ def save_post_generation(
 
     db.refresh(new_post)
 
-
-
     return new_post
+
 
 # =========================================================
 # GET SAVED POST HISTORY
 # =========================================================
+
 
 def get_saved_post_generations(
     db,
@@ -1268,55 +1031,33 @@ def get_saved_post_generations(
         authenticated_account,
     )
 
-
     posts = (
         db.query(PostGeneration)
-        .filter(
-            PostGeneration.user_id == current_user.id
-        )
-        .order_by(
-            PostGeneration.created_at.desc()
-        )
+        .filter(PostGeneration.user_id == current_user.id)
+        .order_by(PostGeneration.created_at.desc())
         .all()
     )
 
-
     return posts
 
-def delete_saved_post(
-    db,
-    authenticated_account,
-    post_id
-):
 
-    current_user = resolve_application_user(
-        db,
-        authenticated_account
-    )
+def delete_saved_post(db, authenticated_account, post_id):
 
+    current_user = resolve_application_user(db, authenticated_account)
 
     post = (
         db.query(PostGeneration)
         .filter(
-            PostGeneration.post_id==post_id,
-            PostGeneration.user_id==current_user.id
+            PostGeneration.post_id == post_id, PostGeneration.user_id == current_user.id
         )
         .first()
     )
 
-
     if not post:
 
-        raise HTTPException(
-            status_code=404,
-            detail="Post not found"
-        )
-
+        raise HTTPException(status_code=404, detail="Post not found")
 
     db.delete(post)
     db.commit()
 
-
-    return {
-        "message":"Post deleted successfully"
-    }
+    return {"message": "Post deleted successfully"}
