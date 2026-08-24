@@ -25,6 +25,7 @@ import {
   Newspaper,
   RefreshCw,
   Search,
+  Send,
   ShieldCheck,
   Sparkles,
   UserRound,
@@ -42,6 +43,8 @@ import VoiceInterview from "./VoiceInterview";
 import CampaignManagement from "./CampaignManagement";
 import WritingStylePresets from "./WritingStylePresets";
 import ContentPlanCalendar from "./ContentPlanCalendar";
+import Release from "./Release";
+
 
 
 // Future API endpoints can be connected to each feature from this list.
@@ -140,7 +143,14 @@ const workspaceNavigation = [
     icon: Mail,
     description: "Discover creators and manage newsletter delivery preferences.",
   },
+  {
+    id: "release",
+    name: "Release",
+    icon: Send,
+    description: "Automated social media posting via Zernio.",
+  },
 ];
+
 
 const contentNavigation = [
   {
@@ -435,12 +445,14 @@ function Dashboard({ user, onLogout }) {
 
   // This function renders the home page body.
   function renderHome() {
+    const releaseItem = workspaceNavigation.find((item) => item.id === "release");
     const quickActions = [
       workspaceNavigation[1],
       workspaceNavigation[2],
       workspaceNavigation[3],
-      workspaceNavigation[7],
+      releaseItem || workspaceNavigation[7],
     ];
+
 
     return (
       <section className="space-y-6">
@@ -785,7 +797,17 @@ function Dashboard({ user, onLogout }) {
       );
     }
 
+    if (activePage === "release") {
+      return (
+        <Release
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
     if (activePage === "profile") {
+
       return renderProfile();
     }
 
