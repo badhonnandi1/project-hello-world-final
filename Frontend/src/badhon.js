@@ -510,3 +510,76 @@ export async function getCampaigns(token) {
     },
   });
 }
+
+
+// This function retrieves the user's latest post generation.
+export async function getLatestGeneration(token) {
+  return request("/release/latest-generation", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function retrieves unposted content plans for the user.
+export async function getBackloggedPlans(token) {
+  return request("/release/backlogged-plans", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function releases the latest post generation to Zernio.
+export async function publishLatestPost(token) {
+  return request("/release/publish-latest", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function releases selected backlogged content plans to Zernio.
+export async function publishBackloggedPosts(token, planIds) {
+  return request("/release/publish-backlogged", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({ plan_ids: planIds }),
+  });
+}
+
+
+// This function retrieves the user's connected social media accounts.
+export async function getUserConnections(token) {
+  return request("/release/connections", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+
+// This function creates a mock social account connection for dev testing.
+export async function mockConnectAccount(token, platform, dummyAccountId = null) {
+  return request("/release/mock-connect", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      platform: platform,
+      dummy_account_id: dummyAccountId,
+    }),
+  });
+}
+
+

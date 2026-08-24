@@ -24,6 +24,8 @@ from app.routes.newsletter_route import router as newsletter_router
 from app.routes.newsletter_subscription_route import (
     router as newsletter_subscription_router,
 )
+from app.routes.release_route import router as release_router
+
 
 
 ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
@@ -56,6 +58,8 @@ app.include_router(writing_style_preset_router)
 app.include_router(campaign_router)
 app.include_router(newsletter_router)
 app.include_router(newsletter_subscription_router)
+app.include_router(release_router)
+
 
 # This API endpoint confirms that the authentication API is running.
 @app.get("/")
