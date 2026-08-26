@@ -1,5 +1,4 @@
-const rawApiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
-const BASE_URL = rawApiUrl.replace(/\/+$/, "");
+export const BASE_URL = (import.meta.env.VITE_API_URL || "http://127.0.0.1:8000").replace(/\/$/, "");
 
 
 // This function sends requests to the backend and turns error responses into messages.
