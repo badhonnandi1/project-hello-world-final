@@ -55,7 +55,7 @@ def get_subscription_status(db: Session, authenticated_account):
 
 def upgrade_to_premium(db: Session, authenticated_account):
     """
-    Mock upgrade: Sets user tier to premium.
+  
     In production, this would be triggered by a successful payment webhook.
     """
     user = resolve_application_user(db, authenticated_account)

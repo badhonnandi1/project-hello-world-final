@@ -44,10 +44,7 @@ def get_latest_completed_interview(db: Session, user_id):
 def build_viral_topic_prompt(interview, custom_niche=None):
     """
     Build the AI prompt using the user's interview data.
-    This is the core of the feature — the more specific the interview data,
-    the better the AI's topic suggestions will be.
     """
-    # Use custom niche if provided, otherwise use interview data
     profession = custom_niche or interview.profession or "Content Creator"
     company = interview.company_name or "their company"
     audience = interview.target_audience or "a general audience"
@@ -55,7 +52,9 @@ def build_viral_topic_prompt(interview, custom_niche=None):
     identity = interview.online_identity or "professional"
     style = interview.writing_style or "clear and engaging"
 
-    prompt = f"""You are a viral content strategist for social media. 
+    prompt = f"""You are a viral content strategist for social media with expertise in current trends.
+
+IMPORTANT CONTEXT: The current date is August 2026. Focus on the LATEST trends, tools, and discussions happening RIGHT NOW in 2026. Do NOT reference outdated 2024 or 2025 trends.
 
 Here is the content creator's profile:
 - Profession/Role: {profession}
@@ -65,7 +64,7 @@ Here is the content creator's profile:
 - Online Identity: {identity}
 - Writing Style: {style}
 
-Generate exactly 8 viral, trending topic ideas that this person should create content about RIGHT NOW.
+Generate exactly 8 viral, trending topic ideas that this person should create content about RIGHT NOW in 2026.
 
 For each topic, provide:
 1. "title": A catchy, scroll-stopping title or hook (max 80 characters)
@@ -74,13 +73,19 @@ For each topic, provide:
 4. "outline": A content outline with 3-5 bullet points of what to cover
 5. "virality_score": A score from 1-10 on how likely this is to go viral
 
+Focus on:
+- Current 2026 trends, AI shift  and tools
+- Latest industry shifts and debates
+- Emerging technologies and workflows
+- What's trending on social media RIGHT NOW
+
 IMPORTANT: Respond ONLY with a valid JSON array. No markdown, no code blocks, no explanations outside the JSON.
 
 Example format:
 [
   {{
-    "title": "Why AI Won't Replace Developers (But This Will)",
-    "reason": "Addresses the #1 fear in tech right now with a contrarian take",
+    "title": "Why [Current 2026 Tool] Changed Everything",
+    "reason": "Addresses the hottest topic in tech right now",
     "platform": "LinkedIn",
     "outline": ["Point 1", "Point 2", "Point 3"],
     "virality_score": 9

@@ -20,6 +20,6 @@ class ViralTopicResponse(BaseModel):
 
 # This schema defines what the frontend sends when requesting generation.
 # Currently empty because the backend reads the user's interview automatically,
-# but we keep it here for future extensibility (e.g., custom niche override).
+
 class ViralTopicGenerateRequest(BaseModel):
-    custom_niche: Optional[str] = None  # User can optionally override their interview niche
+    custom_niche: Optional[str] = None  
