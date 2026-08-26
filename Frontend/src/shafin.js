@@ -1,9 +1,10 @@
-const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const rawApiUrl = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
+const BASE_URL = rawApiUrl.replace(/\/+$/, "");
 
 
 // This function sends requests to the backend and turns error responses into messages.
 async function request(path, options = {}) {
-  const response = await fetch(`${API_URL}${path}`, {
+  const response = await fetch(`${BASE_URL}${path}`, {
     ...options,
     headers: {
       "Content-Type": "application/json",

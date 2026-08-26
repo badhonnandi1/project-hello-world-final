@@ -36,11 +36,29 @@ Base.metadata.create_all(bind=engine)
 
 app = FastAPI(title="GhostWriter Authentication API")
 
-frontend_url = os.getenv("FRONTEND_URL", "http://localhost:5173")
+frontend_url = os.getenv("FRONTEND_URL", "")
+allowed_origins_env = os.getenv("ALLOWED_ORIGINS", "")
+
+allowed_origins = {
+    "http://localhost:5173",
+    "http://127.0.0.1:5173",
+}
+
+if frontend_url:
+    for origin in frontend_url.split(","):
+        cleaned = origin.strip().rstrip("/")
+        if cleaned:
+            allowed_origins.add(cleaned)
+
+if allowed_origins_env:
+    for origin in allowed_origins_env.split(","):
+        cleaned = origin.strip().rstrip("/")
+        if cleaned:
+            allowed_origins.add(cleaned)
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[frontend_url],
+    allow_origins=list(allowed_origins),
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
