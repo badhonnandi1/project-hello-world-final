@@ -33,6 +33,8 @@ from app.routes.newsletter_subscription_route import (
 from app.routes.release_route import router as release_router
 
 
+from app.routes import viral_topic_route
+from app.routes import subscription_route
 
 ENV_PATH = Path(__file__).resolve().parent.parent / ".env"
 load_dotenv(ENV_PATH)
@@ -69,6 +71,9 @@ app.include_router(newsletter_subscription_router)
 app.include_router(release_router)
 
 
+# Add this line alongside the other router includes:
+app.include_router(viral_topic_route.router)
+app.include_router(subscription_route.router)
 # This API endpoint confirms that the authentication API is running.
 @app.get("/")
 def read_root():

@@ -103,3 +103,67 @@ export async function deleteContentPlan(token, planId) {
     },
   });
 }
+// Add these to shafin.js
+
+export async function generateViralTopics(token, customNiche = null) {
+  return request("/viral-topics/generate", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ custom_niche: customNiche }),
+  });
+}
+
+export async function getViralTopics(token) {
+  return request("/viral-topics", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function deleteViralTopic(token, topicId) {
+  return request(`/viral-topics/${topicId}`, {
+    method: "DELETE",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+// Subscription Management APIs
+
+export async function getSubscriptionStatus(token) {
+  return request("/subscription/status", {
+    method: "GET",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function upgradeToPremium(token) {
+  return request("/subscription/upgrade", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function downgradeToFree(token) {
+  return request("/subscription/downgrade", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+// Stripe Checkout APIs
+
+export async function createCheckoutSession(token) {
+  return request("/subscription/create-checkout", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}
+
+export async function verifyPayment(token, sessionId) {
+  return request(`/subscription/verify-payment?session_id=${sessionId}`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+}

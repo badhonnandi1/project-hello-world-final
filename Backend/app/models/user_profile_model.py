@@ -44,6 +44,15 @@ class User(Base):
         default="free",
         server_default=text("'free'"),
     )
+    viral_topics_used_this_month = Column(
+        Integer, nullable=False, default=0, server_default=text("0")
+    )
+    content_plans_used_this_month = Column(
+        Integer, nullable=False, default=0, server_default=text("0")
+    )
+    last_usage_reset = Column(
+        DateTime(timezone=True), nullable=False, server_default=func.now()
+    )
     is_active = Column(Boolean, nullable=False, default=True, server_default=text("true"))
     created_at = Column(DateTime(timezone=True), nullable=False, server_default=func.now())
     updated_at = Column(

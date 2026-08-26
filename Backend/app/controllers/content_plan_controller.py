@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 from app.models.content_plan_model import ContentPlan
 from app.schemas.content_plan_schema import ContentPlanCreateRequest, ContentPlanResponse
 from app.models.user_model import UserAuth
+from app.controllers.subscription_controller import check_and_increment_usage
 
 def create_content_plan(db: Session, user_auth, request: ContentPlanCreateRequest):
     if not user_auth.user_profile:
@@ -11,6 +12,10 @@ def create_content_plan(db: Session, user_auth, request: ContentPlanCreateReques
             detail="User profile not found. Please ensure your profile is set up."
         )
     user_profile = user_auth.user_profile
+    
+    # ⬇️ ADD THIS LINE — Check subscription limits before creating the plan
+    check_and_increment_usage(db, user_profile, "content_plans")
+    
     content_plan = ContentPlan(
         user_id=user_profile.id,
         title=request.title,

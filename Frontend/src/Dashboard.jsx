@@ -48,6 +48,8 @@ import PostGeneration from "./PostGeneration";
 import Release from "./Release";
 
 
+import ViralTopics from "./ViralTopics";
+import SubscriptionManagement from "./SubscriptionManagement";
 
 // Future API endpoints can be connected to each feature from this list.
 const features = [
@@ -69,6 +71,7 @@ const features = [
   { id: "review-and-approval", name: "Review and Approval" },
   { id: "newsletter-studio", name: "Newsletter Studio" },
   { id: "newsletter-subscriptions", name: "Newsletter Subscriptions" },
+  { id: "viral-topics", name: "Viral Topics" },
 ];
 const workspaceNavigation = [
   {
@@ -108,6 +111,12 @@ const workspaceNavigation = [
     name: "Campaign Management",
     icon: Megaphone,
     description: "Plan campaign goals, themes, and publishing motion.",
+  },
+  {
+  id: "viral-topics",
+  name: "Viral Topics",
+  icon: WandSparkles,
+  description: "Generate AI-powered viral content ideas from your profile.",
   },
   {
     id: "subscription-management",
@@ -259,8 +268,13 @@ function Dashboard({ user, onLogout }) {
         setProfileLoading(false);
       }
     }
-
+    const pendingSession = localStorage.getItem("pending_stripe_verification");
+    if (pendingSession) {
+      setActivePage("subscription-management");
+    }
+    
     checkProfile();
+
   }, []);
 
   // This function changes the dashboard body without reloading the page.
@@ -832,7 +846,16 @@ function Dashboard({ user, onLogout }) {
 
     return renderFeaturePlaceholder(getActiveFeatureName());
   }
-
+  if (activePage === "viral-topics") {
+  return (
+    <ViralTopics onBackToDashboard={() => openPage("home")} />
+  );
+}
+if (activePage === "subscription-management") {
+  return (
+    <SubscriptionManagement onBackToDashboard={() => openPage("home")} />
+  );
+}
   return (
     <div className="min-h-screen bg-zinc-50 text-zinc-950 lg:pl-72">
       <button

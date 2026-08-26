@@ -23,3 +23,4 @@ from app.models.post_generation_model import PostGeneration
 from app.models.released_posts_model import ReleasedPost
 from app.models.user_social_account_model import UserSocialAccount
 
+from app.models.viral_topic_model import ViralTopic

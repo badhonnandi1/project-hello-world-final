@@ -40,5 +40,5 @@ class ContentPlan(Base):
     )
 
     # One-way relationship: the plan knows its user.
-    # We do NOT touch the shared User model (team-safe).
+  
     user = relationship("User")
