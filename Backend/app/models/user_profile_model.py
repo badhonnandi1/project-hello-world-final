@@ -99,3 +99,14 @@ class User(Base):
         back_populates="user",
         cascade="all, delete-orphan",
     )
+    privacy_guardrails = relationship(
+        "PrivacyGuardrail",
+        back_populates="user",
+        cascade="all, delete-orphan",
+    )
+
+    post_generations = relationship(
+        "PostGeneration",
+         back_populates="user",
+         cascade="all, delete-orphan",
+    )

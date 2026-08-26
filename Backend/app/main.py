@@ -20,6 +20,12 @@ from app.routes.writing_style_preset_route import (
     router as writing_style_preset_router,
 )
 from app.routes.campaign_route import router as campaign_router
+from app.routes.privacy_guardrail_route import (
+    router as privacy_guardrail_router,
+)
+from app.routes.post_generation_route import (
+    router as post_generation_router,
+)
 from app.routes.newsletter_route import router as newsletter_router
 from app.routes.newsletter_subscription_route import (
     router as newsletter_subscription_router,
@@ -56,6 +62,8 @@ app.include_router(voice_interview_router)
 app.include_router(content_plan_router)
 app.include_router(writing_style_preset_router)
 app.include_router(campaign_router)
+app.include_router(privacy_guardrail_router)
+app.include_router(post_generation_router)
 app.include_router(newsletter_router)
 app.include_router(newsletter_subscription_router)
 app.include_router(release_router)

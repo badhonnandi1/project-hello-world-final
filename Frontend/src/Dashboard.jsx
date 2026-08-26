@@ -43,6 +43,8 @@ import VoiceInterview from "./VoiceInterview";
 import CampaignManagement from "./CampaignManagement";
 import WritingStylePresets from "./WritingStylePresets";
 import ContentPlanCalendar from "./ContentPlanCalendar";
+import PrivacyGuardrails from "./PrivacyGuardrails";
+import PostGeneration from "./PostGeneration";
 import Release from "./Release";
 
 
@@ -769,7 +771,24 @@ function Dashboard({ user, onLogout }) {
         />
       );
     }
+    if (activePage === "privacy-guardrails") {
+      return (
+        <PrivacyGuardrails
+           token={token}
+           onUnauthorized={handleSignOut}
+        />
+      );
+    }
+    if (activePage === "post-generation") {
 
+      return (
+        <PostGeneration
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+
+    }
     if (activePage === "campaign-management") {
       return (
         <CampaignManagement

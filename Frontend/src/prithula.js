@@ -1,6 +1,5 @@
 const API_URL = import.meta.env.VITE_API_URL || "http://127.0.0.1:8000";
 
-
 // This function sends requests to the backend and turns error responses into messages.
 async function request(path, options = {}) {
   const response = await fetch(`${API_URL}${path}`, {
@@ -19,10 +18,29 @@ async function request(path, options = {}) {
     data = null;
   }
 
+  //if (!response.ok) {
+  //const message = data?.detail || "Something went wrong";
+  //const error = new Error(message);
+  //error.status = response.status;
+  //throw error;
+  //}
   if (!response.ok) {
-    const message = data?.detail || "Something went wrong";
+    let message = "Something went wrong";
+
+    if (typeof data?.detail === "string") {
+      message = data.detail;
+    } else if (typeof data?.detail === "object") {
+      message = data.detail.message || "Request failed";
+    }
+
     const error = new Error(message);
+
     error.status = response.status;
+
+    // IMPORTANT
+    // Keep backend violation data
+    error.details = data?.detail;
+
     throw error;
   }
 
@@ -67,7 +85,6 @@ export async function getInterviewAnswers(token) {
   });
 }
 
-
 // This function loads the latest writing analysis.
 export async function getWritingAnalysis(token) {
   return request("/voice-profile/writing-analysis", {
@@ -77,7 +94,6 @@ export async function getWritingAnalysis(token) {
     },
   });
 }
-
 
 // This function loads the user's saved voice profile.
 export async function getVoiceProfile(token) {
@@ -89,7 +105,6 @@ export async function getVoiceProfile(token) {
   });
 }
 
-
 // This function generates a new voice profile.
 export async function generateVoiceProfile(token) {
   return request("/voice-profile/generate", {
@@ -99,7 +114,6 @@ export async function generateVoiceProfile(token) {
     },
   });
 }
-
 
 // This function updates the user's voice profile.
 export async function updateVoiceProfile(token, profileData) {
@@ -143,7 +157,6 @@ export async function transcribeVoiceInterview(token, audioBlob) {
   });
 }
 
-
 // This function saves a newly recorded Voice Interview.
 export async function createVoiceInterview(token, interviewData) {
   return request("/voice-interviews", {
@@ -154,7 +167,6 @@ export async function createVoiceInterview(token, interviewData) {
     body: JSON.stringify(interviewData),
   });
 }
-
 
 // This function gets the latest Voice Interview
 // belonging to the logged-in user.
@@ -167,13 +179,8 @@ export async function getLatestVoiceInterview(token) {
   });
 }
 
-
 // This function updates an existing Voice Interview.
-export async function updateVoiceInterview(
-  token,
-  interviewId,
-  interviewData
-) {
+export async function updateVoiceInterview(token, interviewId, interviewData) {
   return request(`/voice-interviews/${interviewId}`, {
     method: "PUT",
     headers: {
@@ -231,11 +238,7 @@ export async function getWritingStylePreset(token, presetId) {
 }
 
 // Update an existing Writing Style Preset.
-export async function updateWritingStylePreset(
-  token,
-  presetId,
-  presetData
-) {
+export async function updateWritingStylePreset(token, presetId, presetData) {
   return request(`/writing-style-presets/${presetId}`, {
     method: "PUT",
     headers: {
@@ -249,6 +252,187 @@ export async function updateWritingStylePreset(
 export async function deleteWritingStylePreset(token, presetId) {
   return request(`/writing-style-presets/${presetId}`, {
     method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// ---------------------------------------------------------
+// PRIVACY GUARDRAILS
+// ---------------------------------------------------------
+
+// Get all Privacy Guardrail rules belonging to the logged-in user.
+export async function getPrivacyGuardrails(token) {
+  return request("/privacy-guardrails", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Create a new Privacy Guardrail rule.
+export async function createPrivacyGuardrail(token, guardrailData) {
+  return request("/privacy-guardrails", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(guardrailData),
+  });
+}
+
+// Update an existing Privacy Guardrail rule.
+export async function updatePrivacyGuardrail(token, ruleId, guardrailData) {
+  return request(`/privacy-guardrails/${ruleId}`, {
+    method: "PUT",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(guardrailData),
+  });
+}
+
+// Enable or disable a Privacy Guardrail rule.
+export async function togglePrivacyGuardrail(token, ruleId) {
+  return request(`/privacy-guardrails/${ruleId}/toggle`, {
+    method: "PATCH",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Delete a Privacy Guardrail rule permanently.
+export async function deletePrivacyGuardrail(token, ruleId) {
+  return request(`/privacy-guardrails/${ruleId}`, {
+    method: "DELETE",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Check text against all active Privacy Guardrails.
+export async function checkPrivacyGuardrails(token, text) {
+  return request("/privacy-guardrails/check", {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      text,
+    }),
+  });
+}
+
+// ---------------------------------------------------------
+// POST GENERATION
+// ---------------------------------------------------------
+
+// Load available content plans
+export async function getPostGenerationContentPlans(token) {
+  return request("/post-generation/content-plans", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Load available voice interviews
+export async function getPostGenerationVoiceInterviews(token) {
+  return request("/post-generation/voice-interviews", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Load knowledge vault items
+export async function getPostGenerationKnowledgeItems(token) {
+  return request("/post-generation/knowledge-items", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Load writing style presets
+export async function getPostGenerationStylePresets(token) {
+  return request("/post-generation/style-presets", {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// Generate post
+export async function generatePost(token, generationData) {
+  return request("/post-generation/generate", {
+    method: "POST",
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+
+    body: JSON.stringify(generationData),
+  });
+}
+
+// Regenerate post
+export async function regeneratePost(token, regenerationData) {
+  return request("/post-generation/regenerate", {
+    method: "POST",
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+
+    body: JSON.stringify(regenerationData),
+  });
+}
+
+// Save generated post
+export async function saveGeneratedPost(token, saveData) {
+  return request("/post-generation/save", {
+    method: "POST",
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+
+    body: JSON.stringify(saveData),
+  });
+}
+
+// Load saved generated posts
+export async function getSavedGeneratedPosts(token) {
+  return request("/post-generation/my-posts", {
+    method: "GET",
+
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+}
+
+// ---------------------------------------------------------
+// CHECK PRIVACY FOR EDITED / GENERATED TEXT
+// ---------------------------------------------------------
+
+// ---------------------------------------------------------
+// DELETE SAVED GENERATED POST
+// ---------------------------------------------------------
+
+export async function deleteSavedGeneratedPost(token, postId) {
+  return request(`/post-generation/${postId}`, {
+    method: "DELETE",
+
     headers: {
       Authorization: `Bearer ${token}`,
     },
