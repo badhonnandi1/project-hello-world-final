@@ -2,23 +2,30 @@ import { useEffect, useState } from "react";
 import KnowledgeVault from "./KnowledgeVault";
 import GuidedInterview from "./GuidedInterview"
 import WritingAnalyzer from "./WritingAnalyzer";
+import StoryAngleBuilder from "./StoryAngleBuilder";
+import NewsletterStudio from "./NewsletterStudio";
+import NewsletterSubscriptions from "./NewsletterSubscriptions";
 import {
   BadgeCheck,
   BookOpen,
   CalendarDays,
   ClipboardList,
+  Compass,
   CreditCard,
   FileText,
   Home,
   LogOut,
+  Mail,
   Megaphone,
   Menu,
   MessageCircle,
   Mic,
   Palette,
   PenTool,
+  Newspaper,
   RefreshCw,
   Search,
+  Send,
   ShieldCheck,
   Sparkles,
   UserRound,
@@ -28,6 +35,7 @@ import {
 
 
 import AudienceOpportunities from "./AudienceOpportunities";
+import ExploreOpportunities from "./ExploreOpportunities";
 
 import { getMyProfile, saveMyProfile } from "./badhon";
 import VoiceProfile from "./VoiceProfile";
@@ -37,6 +45,8 @@ import WritingStylePresets from "./WritingStylePresets";
 import ContentPlanCalendar from "./ContentPlanCalendar";
 import PrivacyGuardrails from "./PrivacyGuardrails";
 import PostGeneration from "./PostGeneration";
+import Release from "./Release";
+
 
 
 // Future API endpoints can be connected to each feature from this list.
@@ -57,6 +67,8 @@ const features = [
   { id: "rewrite-laboratory", name: "Rewrite Laboratory" },
   { id: "quality-checker", name: "Quality Checker" },
   { id: "review-and-approval", name: "Review and Approval" },
+  { id: "newsletter-studio", name: "Newsletter Studio" },
+  { id: "newsletter-subscriptions", name: "Newsletter Subscriptions" },
 ];
 const workspaceNavigation = [
   {
@@ -83,6 +95,14 @@ const workspaceNavigation = [
     icon: ClipboardList,
     description: "Turn audience questions and objections into content ideas.",
   },
+  {
+    id: "explore-opportunities",
+    name: "Explore Opportunities",
+    icon: Compass,
+    description: "Explore community opportunities matching your audience.",
+    status: "implemented",
+  },
+
   {
     id: "campaign-management",
     name: "Campaign Management",
@@ -113,7 +133,26 @@ const workspaceNavigation = [
     icon: CalendarDays,
     description: "Shape saved knowledge into a content plan.",
   },
+  {
+    id: "newsletter-studio",
+    name: "Newsletter Studio",
+    icon: Newspaper,
+    description: "Create, generate, and publish newsletters for your readers.",
+  },
+  {
+    id: "newsletter-subscriptions",
+    name: "Newsletter Subscriptions",
+    icon: Mail,
+    description: "Discover creators and manage newsletter delivery preferences.",
+  },
+  {
+    id: "release",
+    name: "Release",
+    icon: Send,
+    description: "Automated social media posting via Zernio.",
+  },
 ];
+
 
 const contentNavigation = [
   {
@@ -408,12 +447,14 @@ function Dashboard({ user, onLogout }) {
 
   // This function renders the home page body.
   function renderHome() {
+    const releaseItem = workspaceNavigation.find((item) => item.id === "release");
     const quickActions = [
       workspaceNavigation[1],
       workspaceNavigation[2],
       workspaceNavigation[3],
-      workspaceNavigation[6],
+      releaseItem || workspaceNavigation[7],
     ];
+
 
     return (
       <section className="space-y-6">
@@ -656,6 +697,27 @@ function Dashboard({ user, onLogout }) {
         />
       );
     }
+
+    if (activePage === "explore-opportunities") {
+      return (
+        <ExploreOpportunities
+          token={token}
+          onUnauthorized={handleSignOut}
+          onNavigate={openPage}
+        />
+      );
+    }
+
+
+    if (activePage === "rag-retrieval") {
+      return (
+        <StoryAngleBuilder
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
     if (activePage === "guided-interview") {
       return (
         <GuidedInterview
@@ -736,7 +798,35 @@ function Dashboard({ user, onLogout }) {
       );
     }
 
+    if (activePage === "newsletter-studio") {
+      return (
+        <NewsletterStudio
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
+    if (activePage === "newsletter-subscriptions") {
+      return (
+        <NewsletterSubscriptions
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
+    if (activePage === "release") {
+      return (
+        <Release
+          token={token}
+          onUnauthorized={handleSignOut}
+        />
+      );
+    }
+
     if (activePage === "profile") {
+
       return renderProfile();
     }
 

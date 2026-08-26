@@ -75,6 +75,8 @@ class PostGeneration(Base):
         server_default=text("'allow'"),
     )
 
+    content = Column(Text, nullable=False)
+    platform = Column(String(100), nullable=True)
     created_at = Column(
         DateTime(timezone=True),
         nullable=False,
@@ -94,3 +96,8 @@ class PostGeneration(Base):
           "User",
           back_populates="post_generations",
     ) 
+    user = relationship("User")
+
+    @property
+    def id(self):
+        return self.post_id
